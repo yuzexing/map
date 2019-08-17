@@ -1,0 +1,206 @@
+.left-container {
+  display: flex;
+  flex-direction: column;
+  padding-left: 40px;
+}
+
+.second-title {
+  font-size: 24px;
+  color: #57C8EE;
+  letter-spacing: 0;
+  display: flex;
+  align-items: center;
+}
+.second-title::before {
+  content: '';
+  background: #57C8EE;
+  width: 10px;
+  height: 24px;
+  margin-right: 16px;
+  display: inline-block;
+}
+.left-container .legend {
+  display: flex;
+  flex-direction: row-reverse;
+  align-content: center;
+}
+.left-container .yesterday, .left-container .today {
+  font-size: 12px;
+  color: #C5C5C5;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.left-container .yesterday::before {
+  content: '';
+  background: #2169BC;
+  width: 6px;
+  height: 6px;
+  margin-right: 4px;
+  display: inline-block;
+}
+.left-container .today::before {
+  content: '';
+  background: #5CC4E5;
+  width: 6px;
+  height: 6px;
+  margin-right: 4px;
+  display: inline-block;
+  margin-left: 12px;
+}
+#hour-income-chart {
+  width: 100%;
+  height: 200px;
+}
+.left-center {
+  margin-top: 56px;
+}
+.park-info-container {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+}
+.image-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.park-number {
+  margin-left: 104px;
+}
+.image-seat, .image-number {
+  width: 86px;
+  height: 86px;
+}
+.left-top {
+  margin-top: 16px;
+}
+.seat-image-wrap {
+  margin-left: 20px;
+
+}
+.number-image-wrap {
+  margin-left: 91px;
+
+}
+.seat-image-wrap, .number-image-wrap {
+  padding-bottom: 50px;
+  position: relative;
+}
+.seat-amount, .park-amount {
+  font-size: 32px;
+  color: #FFFFFF;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 4px;
+}
+.ge-unit, .liang-unit {
+  position: relative;
+}
+.ge-unit::after {
+  content: '个';
+  opacity: 0.7;
+  font-size: 14px;
+  color: #ddd;
+  position: absolute;
+  right: -8px;
+  bottom: 2px;
+  transform: translateX(100%);
+}
+.liang-unit::after {
+  content: '辆';
+  opacity: 0.7;
+  font-size: 14px;
+  color: #ddd;
+  position: absolute;
+  right: -8px;
+  bottom: 2px;
+  transform: translateX(100%);
+}
+.left-bottom {
+  margin-top: 45px;
+}
+.panel-wrap {
+  margin-top: 20px;
+}
+.panel-title {
+  opacity: 0.82;
+  background: #021C4E;
+  display: flex;
+  flex-direction: column;
+  padding-top: 8px;
+}
+.list-title {
+  font-size: 16px;
+  color: #57C8EE;
+  text-align: center;
+}
+.list-item-title {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  height: 34px;
+  font-size: 14px;
+  color: #C5C5C5;
+  padding: 6px 32px 8px 23px;
+}
+.title-one, .item-one {
+  flex-shrink: 0;
+}
+.title-second, .item-second {
+  flex: 1;
+  flex-shrink: 0;
+  text-align: center;
+}
+.title-third, .item-third {
+  flex-shrink: 0;
+  text-align: right;
+}
+.list-item {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 18px;
+  color: #57C8EE;
+  padding: 0 32px 0 23px;
+}
+.item-second {
+  margin-left: 48px;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  margin-right: 4px;
+  text-overflow: ellipsis;
+}
+.tab-wrap {
+  opacity: 0.82;
+  background: #01133B;
+}
+.tab-wrap .ant-tabs-bottom .ant-tabs-bottom-bar {
+  border-top: none;
+  margin-top: 9px;
+}
+.tab-wrap .ant-tabs-nav-scroll {
+  text-align: center;
+}
+.tab-wrap .ant-tabs-bottom .ant-tabs-bottom-bar .ant-tabs-ink-bar {
+  display: none !important;
+}
+.panel-dot {
+  background: #112E8B;
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+.tab-wrap .ant-tabs-nav .ant-tabs-tab {
+  margin: 0;
+  padding: 12px 6px;
+}
+.tab-wrap .ant-tabs-tab-active .panel-dot {
+  background: #0D1F5A;
+}

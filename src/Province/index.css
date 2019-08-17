@@ -1,0 +1,342 @@
+body {
+ background-image: url('../resource/image/big_background.png');
+ background-repeat: no-repeat;
+ background-size: 100% 100%;
+ background-color: #000a28;
+}
+.container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  /* background-color: #000a28; */
+  user-select: none;
+  background-image: url('../resource/image/light_background.png');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  /* background-color: #000a28; */
+}
+.wave {
+  position: relative;
+  width: 6px;
+  height: 6px;
+  margin-left: -3px;
+  margin-top: -3px;
+  text-align: center;
+}
+
+.wave .circle {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0;
+}
+
+
+/* 波动效果 */
+.wave.solid .circle {
+  width: 100%;
+  height: 100%;
+  background: #fff;
+}
+
+.wave.solid .circle {
+  animation: circle-opacity 1s infinite;
+}
+
+.wave.solid.warning {
+  color: orange;
+}
+.content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+.wave.solid.warning .circle{
+  background: orange;
+}
+.wave.solid.dot-red {
+  color: #f86705;
+}
+.wave.solid.dot-yellow {
+  color: #ecd220;
+}
+.wave.solid.dot-blue {
+  color: #00a0e9;
+}
+.wave.solid.dot-red .circle {
+  background: #f86705;
+}
+.wave.solid.dot-yellow .circle {
+  background: #ecd220;
+}
+.wave.solid.dot-blue .circle {
+  background: #00a0e9;
+}
+.wave.solid.dot-red .fa-bell {
+  background: #f86705;
+}
+.wave.solid.dot-yellow .fa-bell {
+  background: #ecd220;
+}
+.wave.solid.dot-blue .fa-bell {
+  background: #00a0e9;
+}
+/*  */
+.fa-bell {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  background: orange;
+  border-radius: 50%;
+}
+@keyframes circle-opacity {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(3);
+  }
+}
+.parkName {
+  color: #11d0c9;
+  font-size: 12px;
+  background: none;
+}
+.amap-marker-label {
+  border: none;
+  background: none;
+}
+
+.top, .bottom {
+  width: 100%;
+  flex-shrink: 0;
+  color: #fff;
+  z-index: 2;
+}
+.center {
+  width: 100%;
+  flex: 1;
+  min-height: 300px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: row;
+  background-image: url('../resource/image/grid_background.png');
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-position: bottom;
+}
+.top {
+  height: 111px;
+  background-image: url('../resource/image/top_background.png');
+  background-repeat: no-repeat;
+  background-size: 100%;
+  position: relative;
+}
+.left {
+  height: 100%;
+  width: 370px;
+  z-index: 2;
+}
+.right {
+  height: 100%;
+  width: 340px;
+  z-index: 2;
+}
+.inner-center {
+  flex: 1;
+  min-width: 300px;
+}
+.map-wrap {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  /* z-index: -1; */
+}
+.map-container {
+  width: 100%;
+  height: 100%;
+}
+.inner-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.inner-top {
+  position: relative;
+  height: 155px;
+  width: 100%;
+  z-index: 2;
+  user-select: none;
+}
+
+.inner-bottom {
+  height: 185px;
+  width: 100%;
+  z-index: 2;
+  transform-style: preserve-3d;
+  perspective: 200px;
+}
+
+.top-line {
+  padding: 12px 66px 0 66px;
+  display: flex;
+}
+.time {
+  color: #BEC3D4;
+  font-size: 18px;
+  line-height: 30px;
+}
+.logo {
+  height: 40px;
+  margin-right: 13px;
+}
+.title {
+  font-size: 40px;
+  color: #FFFFFF;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.right-option {
+  display: flex;
+  flex-direction: row-reverse;
+  padding-top: 12px;
+  padding-right: 66px;
+  align-items: center;
+}
+.location-city-name {
+  color: #BEC3D4;
+  font-size: 20px;
+  margin-right: 16px;
+}
+.city-select .ant-select-selection {
+  background-color: #08124e;
+  color: #BEC3D4;
+  border-color: transparent;
+}
+.city-select .ant-select-arrow .ant-select-arrow-icon {
+  color: #BEC3D4;
+}
+.location {
+  height: 36px;
+  margin-right: 16px;
+}
+.total-price-wrap {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: flex-end;
+}
+.card-number {
+  background-image: url('../resource/image/price_background.png');
+  background-repeat: no-repeat;
+  background-size: 100%;
+  width: 68px;
+  height: 105px;
+  font-size: 80px;
+  color: #FFFFFF;
+  font-weight: bold;
+  line-height: 100px;
+  text-align: center;
+  margin-right: 16px;
+}
+.card-number:last-of-type {
+  margin-right: 12px;
+}
+.no-margin {
+  margin-right: 0;
+}
+.dot {
+  margin: 0 12px;
+  color: #FFFFFF;
+  height: 105px;
+  position: relative;
+  width: 16px;
+}
+.dot::after {
+  content: '';
+  bottom: 10px;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: #fff;
+  position: absolute;
+}
+.price-unit {
+  font-size: 24px;
+  color: #B1AFAF;
+}
+.map-center {
+  flex: 1;
+  position: relative;
+}
+.map-legend {
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  bottom: 100px;
+  right: 100px;
+  pointer-events: none;
+}
+.legend-item {
+  font-size: 16px;
+  color: #318cda;
+  display: flex;
+  align-items: center;
+  margin-bottom: 18px;
+}
+.legend-item::before {
+  content: '';
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  background-color: #f86705;
+  border-radius: 50%;
+  margin-right: 16px;
+}
+.legend-item:last-child {
+  margin-bottom: 0;
+}
+.legend-item.yellow::before {
+  background-color: #ecd220;
+}
+.legend-item.blue::before {
+  background-color: #00a0e9;
+}
+.ant-select-dropdown {
+  background-color: #0C1149;
+}
+.ant-select-dropdown .ant-select-dropdown-menu-item {
+  color: #C5C7CB;
+}
+.ant-select-dropdown-menu-item:hover:not(.ant-select-dropdown-menu-item-disabled) {
+  background-color: #134B73;
+}
+.ant-select-dropdown .ant-select-dropdown-menu-item.ant-select-dropdown-menu-item-selected {
+  background-color: #214C8E  ;
+}
+.ant-select-dropdown-menu-item-active:not(.ant-select-dropdown-menu-item-disabled) {
+  background-color: #134B73;
+}
+::-webkit-scrollbar
+{
+	width: 0;
+	height: 8px;
+	/* background-color: #F5F5F5; */
+}
