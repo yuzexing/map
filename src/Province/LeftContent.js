@@ -4,11 +4,43 @@ import { Tabs } from 'antd';
 import Echart from 'echarts';
 import imgNumber from '../resource/image/park_number.png';
 import imgSeat from '../resource/image/park_seat.png';
-import { list1, list2, list3, list4, list5 } from '../resource/data/parkList';
+import { list1, list2, list3, list4, list5, list6 } from '../resource/data/parkList';
 import './leftContent.css';
 
 const { TabPane } = Tabs;
 
+const TOPS_TAB_ARRARY = [
+  {
+    data: list1,
+    title: '车位饱和度排行榜',
+    name: '饱和度',
+  },
+  {
+    data: list2,
+    title: '实收金额排行榜',
+    name: '实收(元)',
+  },
+  {
+    data: list3,
+    title: '吞吐量排行榜',
+    name: '吞吐量',
+  },
+  {
+    data: list4,
+    title: '流转率排行榜',
+    name: '流转率',
+  },
+  {
+    data: list5,
+    title: '故障率排行榜',
+    name: '故障率',
+  },
+  {
+    data: list6,
+    title: '逃逸率排行榜',
+    name: '逃逸率',
+  },
+];
 
 class LeftContent extends Component {
 
@@ -84,16 +116,31 @@ class LeftContent extends Component {
   
   };
 
-  renderParks = (data) => {
-    return data.map(({ no, paName, amount }) => {
-      return (
-        <div className="list-item">
-          <span className="item-one">{no}</span>
-          <span className="item-second">{paName}</span>
-          <span className="item-third">{amount}</span>
+  renderParks = (data, title, name) => {
+    return (
+      <>
+        <div className="panel-title">
+          <div className="list-title">{title}</div>
+          <div className="list-item-title">
+            <span className="title-one">名次</span>
+            <span className="title-second">停车场</span>
+            <span className="title-third">{name}</span>
+          </div>
         </div>
-      );
-    })
+        {
+          data.map(({ no, paName, amount }, index) => {
+            return (
+              <div className="list-item" key={amount + paName}>
+                <span className="item-one">{index + 1}</span>
+                <span className="item-second">{paName}</span>
+                <span className="item-third">{amount}</span>
+              </div>
+            );
+          })
+        }
+      </>
+    );
+    // return 
   };
 
   renderVideo = (index) => {
@@ -111,35 +158,21 @@ class LeftContent extends Component {
         <>
           <div className="second-title">排行榜tops</div>
           <div className="panel-wrap">
-            <div className="panel-title">
-              <div className="list-title">订单数排行榜</div>
-              <div className="list-item-title">
-                <span className="title-one">名次</span>
-                <span className="title-second">停车场</span>
-                <span className="title-third">数量</span>
-              </div>
-            </div>
             <div className="tab-wrap">
               <Tabs
-                defaultActiveKey="1"
+                defaultActiveKey="0"
                 onChange={this.onTabChange}
                 tabPosition="bottom"
               >
-                <TabPane tab={<span className="panel-dot"></span>} key="1">
-                  {this.renderParks(list1)}
-                </TabPane>
-                <TabPane tab={<span className="panel-dot"></span>} key="2">
-                  {this.renderParks(list2)}
-                </TabPane>
-                <TabPane tab={<span className="panel-dot"></span>} key="3">
-                  {this.renderParks(list3)}
-                </TabPane>
-                <TabPane tab={<span className="panel-dot"></span>} key="4">
-                  {this.renderParks(list4)}
-                </TabPane>
-                <TabPane tab={<span className="panel-dot"></span>} key="5">
-                  {this.renderParks(list5)}
-                </TabPane>
+                {
+                  TOPS_TAB_ARRARY.map(({ data, title, name }, index) => {
+                    return (
+                      <TabPane tab={<span className="panel-dot"></span>} key={index}>
+                        {this.renderParks(data, title, name)}
+                      </TabPane>
+                    );
+                  })
+                }
               </Tabs>
             </div>
           </div>

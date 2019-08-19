@@ -100,7 +100,7 @@ body {
   }
   to {
     opacity: 0;
-    transform: scale(3);
+    transform: scale(4);
   }
 }
 .parkName {
@@ -338,5 +338,4 @@ body {
 {
 	width: 0;
 	height: 8px;
-	/* background-color: #F5F5F5; */
 }

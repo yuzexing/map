@@ -159,14 +159,16 @@
   text-align: right;
 }
 .list-item {
-  margin-top: 20px;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   font-size: 18px;
   color: #57C8EE;
-  padding: 0 32px 0 23px;
+  padding: 10px 32px 10px 23px;
+}
+.list-item:hover {
+  background-color: #021e4d;
 }
 .item-second {
   margin-left: 48px;

@@ -23,8 +23,8 @@ class Map extends Component {
     time: moment().format('YYYY年MMMDo dddd ah:mm'),
     currentAdcode: 500000,
     countryName: '重庆',
-    // currentState: STATE_CITY,
-    currentState: STATE_PARK,
+    currentState: STATE_CITY,
+    // currentState: STATE_PARK,
   }
 
   init = true;

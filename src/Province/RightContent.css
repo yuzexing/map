@@ -47,6 +47,9 @@
   line-height: 35px;
   padding: 0 23px;
 }
+.warning-item:hover {
+  background-color: #021e4d;
+}
 .warning-item:last-child {
   margin-bottom: 0;
 }

@@ -2,27 +2,27 @@ export const list1 = [
   {
     no: '01',
     paName: '半岛明珠停车场',
-    amount: 7912,
+    amount: '80%',
   },
   {
     no: '02',
     paName: '建博路停车场',
-    amount: 7712,
+    amount: '77%',
   },
   {
     no: '03',
     paName: '丰盛路停车场',
-    amount: 7651,
+    amount: '71%',
   },
   {
     no: '04',
     paName: '大足停车场',
-    amount: 7248,
+    amount: '67%',
   },
   {
     no: '05',
     paName: '国鑫路停车场',
-    amount: 7044,
+    amount: '66%',
   },
 ];
 
@@ -86,27 +86,27 @@ export const list4 = [
   {
     no: '16',
     paName: '国博中心展会停车场',
-    amount: 5017,
+    amount: '85%',
   },
   {
     no: '17',
     paName: '国博中心展会N3021停车场',
-    amount: 4815,
+    amount: '81%',
   },
   {
     no: '18',
     paName: '国博中心展会',
-    amount: 4568,
+    amount: '80%',
   },
   {
     no: '19',
     paName: '温州商贸城东停车场',
-    amount: 4315,
+    amount: '77%',
   },
   {
     no: '20',
     paName: '爱丁堡地面停车场',
-    amount: 4017,
+    amount: '75%',
   },
 ];
 
@@ -114,26 +114,54 @@ export const list5 = [
   {
     no: '21',
     paName: '温州商贸城西停车场',
-    amount: 3358,
+    amount: '0%',
   },
   {
     no: '22',
     paName: '新城绿洲地面停车场',
-    amount: 3684,
+    amount: '0.06%',
   },
   {
     no: '23',
     paName: '重庆西站演示停车场',
-    amount: 3147,
+    amount: '0.09%',
   },
   {
     no: '24',
     paName: '新城绿洲停车场',
-    amount: 2972,
+    amount: '0.12%',
   },
   {
     no: '25',
     paName: '重庆江北观音桥世纪新都',
-    amount: 2578,
+    amount: '0.14%',
+  },
+];
+
+export const list6 = [
+  {
+    no: '21',
+    paName: '温州商贸城东停车场',
+    amount: '0%',
+  },
+  {
+    no: '22',
+    paName: '重庆江北观音桥世纪新都',
+    amount: '0%',
+  },
+  {
+    no: '23',
+    paName: '国博中心展会停车场',
+    amount: '1%',
+  },
+  {
+    no: '24',
+    paName: '康城路停车场',
+    amount: '1.2%',
+  },
+  {
+    no: '25',
+    paName: '宏声广场西停车场',
+    amount: '1.4%',
   },
 ];

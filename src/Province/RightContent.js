@@ -134,9 +134,10 @@ class rightContent extends Component {
             show: true,
           },
           data: [
-            { value: value[0], name: `在线(${value[0]})`, label: { fontSize: 10 },itemStyle: { color: '#2c82be' }, 
+            { value: value[0], name: `在线(${value[0]})`,itemStyle: { color: '#2c82be' }, 
               label: {
                 show: true,
+                fontSize: 10,
               }, 
             },
             { value: value[1], name:`故障(${value[1]})`, label: { fontSize: 10 }, selected:true, itemStyle: { color: '#c4c38d' } },
