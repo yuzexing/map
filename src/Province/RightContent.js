@@ -17,21 +17,7 @@ class rightContent extends Component {
     const data = [820, 932, 780, 934, 1290, 900];
     this.renderSaturationChart(data);
     this.renderOnlineChart([90, 20, 40]);
-    
-    // function autoScroll() {
-    //   const id = '#park-list';
-    //   const list = $(id);
-    //   const lastTop = list.scrollTop();
-    //   list.scrollTop(lastTop + 1);
-    //   const newTop = list.scrollTop();
-    //   if (newTop === lastTop) {
-    //     list.scrollTop(0);
-    //   }
-    //   requestAnimationFrame(autoScroll);
-    // this.autoScroll();
-    // }
-    requestAnimationFrame(this.autoScroll);
-
+    this.scrollKey = requestAnimationFrame(this.autoScroll);
   }
 
   autoScroll = () => {
@@ -40,8 +26,16 @@ class rightContent extends Component {
     if (top === this.ref.scrollTop) {
       this.ref.scrollTop = 0;
     }
-    requestAnimationFrame(this.autoScroll);
+    this.scrollKey = requestAnimationFrame(this.autoScroll);
   };
+
+  stop = () => {
+    cancelAnimationFrame(this.scrollKey);
+  };
+  start = () => {
+    cancelAnimationFrame(this.scrollKey);
+    this.scrollKey = requestAnimationFrame(this.autoScroll);
+  }
 
   renderSaturationChart = (data) => {
     const saturation = Echart.init(document.getElementById('saturation-chart'), 'customed');
@@ -388,7 +382,7 @@ class rightContent extends Component {
         </div>
         <div className="right-bottom">
           <div className="second-title">消息告警</div>
-          <div className="tips-scroll-wrap" ref={this.getListRef}>
+          <div className="tips-scroll-wrap" ref={this.getListRef} onMouseEnter={this.stop} onMouseLeave={this.start}>
             <div className="tips-wrap">
               <div className="warning-item">
                 扫雪通知
