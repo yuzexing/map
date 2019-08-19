@@ -47,6 +47,8 @@ class rightContent extends Component {
       series: [
         {
           data: dataBig,
+          animationDuration: 2000,
+          animationEasing: 'quinticInOut',
           type: 'line',
           areaStyle: {
             color: {
@@ -80,6 +82,8 @@ class rightContent extends Component {
         },
         {
           data,
+          animationDuration: 2000,
+          animationEasing: 'quinticInOut',
           type: 'line',
           smooth: true,
           itemStyle: {
@@ -107,6 +111,8 @@ class rightContent extends Component {
       },
       series : [
         {
+          animationDuration: 2000,
+          animationEasing: 'quinticInOut',
           name:'center',
           type:'pie',
           radius: [0, '30%'],
@@ -119,6 +125,8 @@ class rightContent extends Component {
           },
         },
         {
+          animationDuration: 2000,
+          animationEasing: 'quinticInOut',
           name: '访问来源',
           type: 'pie',
           radius : ['30%', '60%'],

@@ -45,6 +45,8 @@ class LeftContent extends Component {
           data: data1,
           barWidth: 13,
           barCategoryGap: 1,
+          animationDuration: 2000,
+          animationEasing: 'quinticInOut',
         },
         {
           name: '销量2',
@@ -53,6 +55,8 @@ class LeftContent extends Component {
           barGap: '1%',
           barWidth: 13,
           barCategoryGap: 1,
+          animationDuration: 2000,
+          animationEasing: 'quinticInOut',
         },
       ]
     });
@@ -90,6 +94,8 @@ class LeftContent extends Component {
       series: [
         {
           data: dataBig,
+          animationDuration: 2000,
+          animationEasing: 'quinticInOut',
           type: 'line',
           areaStyle: {
             color: {
@@ -124,6 +130,8 @@ class LeftContent extends Component {
         {
           data,
           type: 'line',
+          animationDuration: 2000,
+          animationEasing: 'quinticInOut',
           smooth: true,
           itemStyle: {
             color: '#EE4F45',
@@ -156,6 +164,8 @@ class LeftContent extends Component {
           type: 'gauge',
           data: [{value: data}],
           radius: '100%',
+          animationDuration: 2000,
+          animationEasing: 'quinticInOut',
           axisLabel: {
             show: false,
           },
@@ -208,6 +218,8 @@ class LeftContent extends Component {
           type: 'gauge',
           data: [{value: data}],
           radius: '100%',
+          animationDuration: 2000,
+          animationEasing: 'quinticInOut',
           axisLabel: {
             show: false,
           },
@@ -272,6 +284,8 @@ class LeftContent extends Component {
         {
           data: orderDataBig,
           type: 'line',
+          animationDuration: 2000,
+          animationEasing: 'quinticInOut',
           areaStyle: {
             color: {
               type: 'linear',
@@ -304,6 +318,8 @@ class LeftContent extends Component {
         {
           data: data,
           type: 'line',
+          animationDuration: 2000,
+          animationEasing: 'quinticInOut',
           itemStyle: {
             opacity: 0,
           },

@@ -9,6 +9,7 @@ import './leftContent.css';
 
 const { TabPane } = Tabs;
 
+
 class LeftContent extends Component {
 
   state = {
@@ -45,6 +46,8 @@ class LeftContent extends Component {
           data: data1,
           barWidth: 13,
           barCategoryGap: 1,
+          animationDuration: 2000,
+          animationEasing: 'quinticInOut',
         },
         {
           name: '2',
@@ -53,6 +56,8 @@ class LeftContent extends Component {
           barGap: '1%',
           barWidth: 13,
           barCategoryGap: 1,
+          animationDuration: 2000,
+          animationEasing: 'quinticInOut',
         },
       ]
     });

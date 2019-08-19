@@ -12,8 +12,10 @@ import './index.css';
 const moment = window.moment;
 const Option = Select.Option;
 
+
 const STATE_PARK = 'park';
 const STATE_CITY = 'city';
+
 
 class Map extends Component {
 
@@ -48,22 +50,15 @@ class Map extends Component {
       zoom: 4,
       mapStyle: 'amap://styles/8a86a4429d9ce1a16a59a1adbf1ec697',
       rotateEnable: false,
-      dragEnable: false,
-      zoomEnable: false,
+      dragEnable: true,
+      zoomEnable: true,
       doubleClickZoom: false,
       keyboardEnable: false,
-      scrollWheel: false,
+      scrollWheel: true,
       touchZoom: false,
     });
     const a = map.getLayers();
     map.remove(a);
-    // return;
-    //just some colors
-    // var colors = [
-    //     "#3366cc"/* , "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00",
-    //     "#b82e2e", "#316395", "#994499", "#22aa99", "#aaaa11", "#6633cc", "#e67300", "#8b0707",
-    //     "#651067", "#329262", "#5574a6", "#3b3eac" */
-    // ];
 
     window.AMapUI.load(['ui/geo/DistrictExplorer', 'lib/$'], function(DistrictExplorer, $) {
         //创建一个实例
@@ -220,7 +215,7 @@ class Map extends Component {
           });
           // console.log(districtExplorer.getAllFeaturePolygons());
           // map.setFitView(districtExplorer.getAllFeaturePolygons(), true, [200, 200, 300, 300]);
-          map.setFitView(districtExplorer.getAllFeaturePolygons(), true, [200, 100, 200, 200]);
+          map.setFitView(districtExplorer.getAllFeaturePolygons(), true, [50, 50, 100, 100]);
         
         }
 
