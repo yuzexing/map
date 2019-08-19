@@ -45,6 +45,8 @@ const TOPS_TAB_ARRARY = [
 class LeftContent extends Component {
 
   state = {
+    seatNumber: 601,
+    seatAmount: 412,
   }
 
   componentDidMount() {
@@ -57,7 +59,16 @@ class LeftContent extends Component {
       title: {
         show: false,
       },
-      // tooltip: {},
+      tooltip: {
+        backgroundColor:'rgba(229,182,106, 0.9)',
+        borderColor: 'rgba(229,182,106, 0.9)',
+        textStyle: {
+          fontSize: 14,
+          color: '#FFFFFF',
+        },
+        padding: [2, 5, 2, 5],
+        formatter: '{c}',
+      },
       xAxis: {
         data: ['17时', '18时', '19时', '20时', '21时', '22时'],
       },
@@ -73,7 +84,7 @@ class LeftContent extends Component {
       },
       series: [
         {
-          name: '1',
+          name: '昨日',
           type: 'bar',
           data: data1,
           barWidth: 13,
@@ -82,7 +93,7 @@ class LeftContent extends Component {
           animationEasing: 'quinticInOut',
         },
         {
-          name: '2',
+          name: '今日',
           type: 'bar',
           data: data2,
           barGap: '1%',
@@ -98,6 +109,10 @@ class LeftContent extends Component {
   
   reloadData = () => {
     this.reloadChart(this.income);
+    this.setState({
+      seatNumber: 100 + parseInt(Math.random() * 600),
+      seatAmount: 100 + parseInt(Math.random() * 1000),
+    });
   };
 
   reloadChart = (chart) => {
@@ -214,6 +229,7 @@ class LeftContent extends Component {
   };
 
   render() {
+    const { seatNumber, seatAmount } = this.state;
     return (
       <div className="left-container">
         <div className="left-top">
@@ -235,13 +251,13 @@ class LeftContent extends Component {
               <div className="seat-image-wrap">
                 <img className="image-seat" alt="" src={imgSeat} />
                 <div className="seat-amount">
-                  <span className="ge-unit">300</span>
+                  <span className="ge-unit">{seatNumber}</span>
                 </div>
               </div>
               <div className="number-image-wrap">
                 <img className="image-number" alt="" src={imgNumber} />
                 <div className="park-amount">
-                  <span className="liang-unit">200</span>
+                  <span className="liang-unit">{seatAmount}</span>
                 </div>
               </div>
             </div>

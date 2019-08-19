@@ -27,7 +27,16 @@ class rightContent extends Component {
       title: {
         show: false,
       },
-      // tooltip: {},
+      tooltip: {
+        backgroundColor:'#23F5F0',
+        borderColor: '#23F5F0',
+        textStyle: {
+          fontSize: 14,
+          color: '#FFFFFF',
+        },
+        padding: [2, 5, 2, 5],
+        formatter: '{c}',
+      },
       xAxis: {
         type: 'category',
         boundaryGap: false,
@@ -109,6 +118,16 @@ class rightContent extends Component {
         containLabel: true,
         show: false,
       },
+      tooltip: {
+        backgroundColor:'rgba(229,182,106, 0.9)',
+        borderColor: 'rgba(229,182,106, 0.9)',
+        textStyle: {
+          fontSize: 14,
+          color: '#FFFFFF',
+        },
+        padding: [2, 5, 2, 5],
+        formatter: '{c}',
+      },
       series : [
         {
           animationDuration: 2000,
@@ -127,7 +146,7 @@ class rightContent extends Component {
         {
           animationDuration: 2000,
           animationEasing: 'quinticInOut',
-          name: '访问来源',
+          name: '设备在线率',
           type: 'pie',
           radius : ['30%', '60%'],
           label: {

@@ -10,8 +10,8 @@ class LeftContent extends Component {
     this.renderEscapeChart([1700, 800, 600, 1300, 1900, 1400], [950, 500, 1100, 1000, 500, 1000]);
     const data = [820, 932, 780, 934, 1290, 900];
     this.renderInOutChart(data);
-    this.renderUseRateChart(64);
-    this.renderSwallowChart(58);
+    this.renderUseRateChart(58);
+    this.renderSwallowChart(64);
     const orderData = [80, 98, 78, 98, 88, 94, 90, 75, 120, 130, 160, 110, 123, 115];
     this.renderOrderChart(orderData);
   }
@@ -23,7 +23,17 @@ class LeftContent extends Component {
       title: {
         show: false,
       },
-      // tooltip: {},
+      
+      tooltip: {
+        backgroundColor:'rgba(229,182,106, 0.9)',
+        borderColor: 'rgba(229,182,106, 0.9)',
+        textStyle: {
+          fontSize: 14,
+          color: '#FFFFFF',
+        },
+        padding: [2, 5, 2, 5],
+        formatter: '{c}',
+      },
       xAxis: {
         data: ['17时', '18时', '19时', '20时', '21时', '22时'],
       },
@@ -71,6 +81,17 @@ class LeftContent extends Component {
     inOut.setOption({
       title: {
         show: false,
+      },
+      
+      tooltip: {
+        backgroundColor:'rgba(229,182,106, 0.9)',
+        borderColor: 'rgba(229,182,106, 0.9)',
+        textStyle: {
+          fontSize: 14,
+          color: '#FFFFFF',
+        },
+        padding: [2, 5, 2, 5],
+        formatter: '{c}',
       },
       xAxis: {
         type: 'category',
@@ -158,6 +179,17 @@ class LeftContent extends Component {
         containLabel: true,
         show: false,
       },
+      
+      tooltip: {
+        backgroundColor:'rgba(229,182,106, 0.9)',
+        borderColor: 'rgba(229,182,106, 0.9)',
+        textStyle: {
+          fontSize: 14,
+          color: '#FFFFFF',
+        },
+        padding: [2, 5, 2, 5],
+        formatter: '{c}',
+      },
       series: [
         {
           name: '业务指标',
@@ -212,6 +244,17 @@ class LeftContent extends Component {
         containLabel: true,
         show: false,
       },
+      
+      tooltip: {
+        backgroundColor:'rgba(229,182,106, 0.9)',
+        borderColor: 'rgba(229,182,106, 0.9)',
+        textStyle: {
+          fontSize: 14,
+          color: '#FFFFFF',
+        },
+        padding: [2, 5, 2, 5],
+        formatter: '{c}',
+      },
       series: [
         {
           name: '业务指标',
@@ -265,6 +308,17 @@ class LeftContent extends Component {
         type: 'category',
         boundaryGap: false,
         data: ['0:00', '2:00', '4:00', '6:00', '8:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00'],
+      },
+      
+      tooltip: {
+        backgroundColor:'rgba(229,182,106, 0.9)',
+        borderColor: 'rgba(229,182,106, 0.9)',
+        textStyle: {
+          fontSize: 14,
+          color: '#FFFFFF',
+        },
+        padding: [2, 5, 2, 5],
+        formatter: '{c}',
       },
       grid: {
         left: 0,
@@ -362,8 +416,8 @@ class LeftContent extends Component {
     this.renderEscapeChart([v(600, 1100), v(600, 1100), v(600, 1100), v(600, 1100), v(600, 1100), v(600, 1100)], [v(600, 1100), v(600, 1100), v(600, 1100), v(600, 1100), v(600, 1100), v(600, 1100)]);
     const data = [v(600, 1100), v(600, 1100), v(600, 1100), v(600, 1100), v(600, 1100), v(600, 1100)];
     this.renderInOutChart(data);
-    this.renderUseRateChart(64);
-    this.renderSwallowChart(58);
+    this.renderUseRateChart(58);
+    this.renderSwallowChart(64);
     const orderData = [v(70, 70), v(70, 70), v(70, 70), v(70, 70), v(70, 70), v(70, 70), v(70, 70), v(70, 70), v(70, 70), v(70, 70), v(70, 70), v(70, 70), v(70, 70), v(70, 70)];
     this.renderOrderChart(orderData);
     // this.reloadChart(this.escape);
