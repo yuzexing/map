@@ -17,7 +17,31 @@ class rightContent extends Component {
     const data = [820, 932, 780, 934, 1290, 900];
     this.renderSaturationChart(data);
     this.renderOnlineChart([90, 20, 40]);
+    
+    // function autoScroll() {
+    //   const id = '#park-list';
+    //   const list = $(id);
+    //   const lastTop = list.scrollTop();
+    //   list.scrollTop(lastTop + 1);
+    //   const newTop = list.scrollTop();
+    //   if (newTop === lastTop) {
+    //     list.scrollTop(0);
+    //   }
+    //   requestAnimationFrame(autoScroll);
+    // this.autoScroll();
+    // }
+    requestAnimationFrame(this.autoScroll);
+
   }
+
+  autoScroll = () => {
+    const top = this.ref.scrollTop;
+    this.ref.scrollTop = top + 1;
+    if (top === this.ref.scrollTop) {
+      this.ref.scrollTop = 0;
+    }
+    requestAnimationFrame(this.autoScroll);
+  };
 
   renderSaturationChart = (data) => {
     const saturation = Echart.init(document.getElementById('saturation-chart'), 'customed');
@@ -340,6 +364,10 @@ class rightContent extends Component {
     );
   };
 
+  getListRef = (ref) => {
+    this.ref = ref;
+  };
+
   render() {
     const { currentState } = this.props;
     const centerLabel = currentState === 'city' ? '设备在线率' : '在岗收费员';
@@ -360,20 +388,115 @@ class rightContent extends Component {
         </div>
         <div className="right-bottom">
           <div className="second-title">消息告警</div>
-          <div className="tips-wrap">
-            <div className="warning-item">
-              扫雪通知
-              <img alt="" src={horn} className="horn" />
-            </div>
-            <div className="warning-item">上级视察团巡视</div>
-            <div className="warning-item">副区长调研审查</div>
-            <div className="warning-item">
-              苏X387s7 三次逃逸
-              <img alt="" src={warning} className="warning" />
-            </div>
-            <div className="warning-item">
-              苏X387s7 二次逃逸
-              <img alt="" src={warning} className="warning" />
+          <div className="tips-scroll-wrap" ref={this.getListRef}>
+            <div className="tips-wrap">
+              <div className="warning-item">
+                扫雪通知
+                <img alt="" src={horn} className="horn" />
+              </div>
+              <div className="warning-item">上级视察团巡视</div>
+              <div className="warning-item">副区长调研审查</div>
+              <div className="warning-item">
+                渝A387C7 三次逃逸
+                <img alt="" src={warning} className="warning" />
+              </div>
+              <div className="warning-item">
+                渝A387C7 二次逃逸
+                <img alt="" src={warning} className="warning" />
+              </div>
+              <div className="warning-item">副省长调研审查</div>
+              <div className="warning-item">
+                雾霾通知
+                <img alt="" src={horn} className="horn" />
+              </div>
+              <div className="warning-item">
+                渝A351A2 二次逃逸
+                <img alt="" src={warning} className="warning" />
+              </div>
+              <div className="warning-item">
+                渝A351A2 三次逃逸
+                <img alt="" src={warning} className="warning" />
+              </div>
+              <div className="warning-item">设备故障警告
+                <img alt="" src={warning} className="warning" />
+              </div>
+              <div className="warning-item">订单异常警告
+                <img alt="" src={warning} className="warning" />
+              </div>
+              <div className="warning-item">区长调研审查</div>
+              <div className="warning-item">局部暴雨通知</div>
+              
+              <div className="warning-item">
+                扫雪通知
+                <img alt="" src={horn} className="horn" />
+              </div>
+              <div className="warning-item">上级视察团巡视</div>
+              <div className="warning-item">副区长调研审查</div>
+              <div className="warning-item">
+                渝A387C7 三次逃逸
+                <img alt="" src={warning} className="warning" />
+              </div>
+              <div className="warning-item">
+                渝A387C7 二次逃逸
+                <img alt="" src={warning} className="warning" />
+              </div>
+              <div className="warning-item">副省长调研审查</div>
+              <div className="warning-item">
+                雾霾通知
+                <img alt="" src={horn} className="horn" />
+              </div>
+              <div className="warning-item">
+                渝A351A2 二次逃逸
+                <img alt="" src={warning} className="warning" />
+              </div>
+              <div className="warning-item">
+                渝A351A2 三次逃逸
+                <img alt="" src={warning} className="warning" />
+              </div>
+              <div className="warning-item">设备故障警告
+                <img alt="" src={warning} className="warning" />
+              </div>
+              <div className="warning-item">订单异常警告
+                <img alt="" src={warning} className="warning" />
+              </div>
+              <div className="warning-item">区长调研审查</div>
+              <div className="warning-item">局部暴雨通知</div>
+
+              <div className="warning-item">
+                扫雪通知
+                <img alt="" src={horn} className="horn" />
+              </div>
+              <div className="warning-item">上级视察团巡视</div>
+              <div className="warning-item">副区长调研审查</div>
+              <div className="warning-item">
+                渝A387C7 三次逃逸
+                <img alt="" src={warning} className="warning" />
+              </div>
+              <div className="warning-item">
+                渝A387C7 二次逃逸
+                <img alt="" src={warning} className="warning" />
+              </div>
+              <div className="warning-item">副省长调研审查</div>
+              <div className="warning-item">
+                雾霾通知
+                <img alt="" src={horn} className="horn" />
+              </div>
+              <div className="warning-item">
+                渝A351A2 二次逃逸
+                <img alt="" src={warning} className="warning" />
+              </div>
+              <div className="warning-item">
+                渝A351A2 三次逃逸
+                <img alt="" src={warning} className="warning" />
+              </div>
+              <div className="warning-item">设备故障警告
+                <img alt="" src={warning} className="warning" />
+              </div>
+              <div className="warning-item">订单异常警告
+                <img alt="" src={warning} className="warning" />
+              </div>
+              <div className="warning-item">区长调研审查</div>
+              <div className="warning-item">局部暴雨通知</div>
             </div>
           </div>
         </div>

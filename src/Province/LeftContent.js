@@ -47,10 +47,23 @@ class LeftContent extends Component {
   state = {
     seatNumber: 601,
     seatAmount: 412,
+    tab: 0,
   }
 
   componentDidMount() {
     this.renderIcomeChart([1700, 800, 600, 1300, 1900, 1400], [950, 500, 1100, 1000, 500, 1000]);
+    setInterval(() => {
+      const { tab } = this.state;
+      const { currentState } = this.props;
+      const max = currentState === 'city' ? 5 : 4;
+      let newTab = tab + 1; 
+      if (newTab > max) {
+        newTab = 0;
+      }
+      this.setState({
+        tab: newTab,
+      });
+    }, 3000);
   }
 
   renderIcomeChart = (data1, data2) => {
@@ -112,6 +125,7 @@ class LeftContent extends Component {
     this.setState({
       seatNumber: 100 + parseInt(Math.random() * 600),
       seatAmount: 100 + parseInt(Math.random() * 1000),
+      tab: 0,
     });
   };
 
@@ -127,8 +141,10 @@ class LeftContent extends Component {
     return parseInt(Math.random() * max + min);
   };
 
-  onTabChange = () => {
-  
+  onTabChange = (index) => {
+    this.setState({
+      tab: index,
+    });
   };
 
   renderParks = (data, title, name) => {
@@ -170,6 +186,7 @@ class LeftContent extends Component {
 
   renderLeftBottom = () => {
     const { currentState } = this.props;
+    const { tab } = this.state;
     if (currentState === 'city') {
       return (
         <>
@@ -177,9 +194,11 @@ class LeftContent extends Component {
           <div className="panel-wrap">
             <div className="tab-wrap">
               <Tabs
-                defaultActiveKey="0"
+                // defaultActiveKey="0"
                 onChange={this.onTabChange}
+                activeKey={String(tab)}
                 tabPosition="bottom"
+                key={currentState}
               >
                 {
                   TOPS_TAB_ARRARY.map(({ data, title, name }, index) => {
@@ -202,25 +221,21 @@ class LeftContent extends Component {
         <div className="panel-wrap">
           <div className="tab-wrap">
             <Tabs
-              defaultActiveKey="1"
               onChange={this.onTabChange}
               tabPosition="bottom"
+              activeKey={String(tab)}
+              key={currentState}
             >
-              <TabPane tab={<span className="panel-dot"></span>} key="1">
-                {this.renderVideo(0)}
-              </TabPane>
-              <TabPane tab={<span className="panel-dot"></span>} key="2">
-                {this.renderVideo(1)}
-              </TabPane>
-              <TabPane tab={<span className="panel-dot"></span>} key="3">
-                {this.renderVideo(2)}
-              </TabPane>
-              <TabPane tab={<span className="panel-dot"></span>} key="4">
-                {this.renderVideo(3)}
-              </TabPane>
-              <TabPane tab={<span className="panel-dot"></span>} key="5">
-                {this.renderVideo(4)}
-              </TabPane>
+              {
+
+                [0, 1, 2, 3, 4].map((i, index) => {
+                  return (
+                  <TabPane tab={<span className="panel-dot"></span>} key={index}>
+                    {this.renderVideo(index)}
+                  </TabPane>
+                  )
+                })
+              }
             </Tabs>
           </div>
         </div>

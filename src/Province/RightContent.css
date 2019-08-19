@@ -36,7 +36,7 @@
   width: 100%;
 }
 .tips-wrap {
-  margin-top: 30px;
+  /* margin-top: 30px; */
 }
 .warning-item {
   margin-bottom: 12px;
@@ -60,4 +60,9 @@
 .warning {
   height: 18px;
   margin-left: 11px;
+}
+.tips-scroll-wrap {
+  height: 260px;
+  overflow: auto;
+  margin-top: 30px;
 }
