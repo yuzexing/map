@@ -3,12 +3,14 @@ import { Tabs } from 'antd';
 import Echart from 'echarts';
 import warning from '../resource/image/warning.png';
 import horn from '../resource/image/horn.png';
+import worker from '../resource/image/work_man.png';
 import './RightContent.css';
 
 
 class rightContent extends Component {
 
   state = {
+    showInfo: false,
   }
 
   componentDidMount() {
@@ -147,15 +149,20 @@ class rightContent extends Component {
   };
   
   reloadData = () => {
-    const v = this.getValue;
-    const data = [v(400, 800), v(400, 800), v(400, 800), v(400, 800), v(400, 800), v(400, 800)];
-    const arr = [v(40, 70), v(10, 20), v(10, 20)];
-    this.saturation.dispose();
-    this.online.dispose();
-    this.renderSaturationChart(data);
-    this.renderOnlineChart(arr);
-    // this.reloadAreaChart(this.saturation);
-    // this.reloadPieChart(this.online);
+    setTimeout(() => {
+      const { currentState } = this.props;
+      const v = this.getValue;
+      const data = [v(400, 800), v(400, 800), v(400, 800), v(400, 800), v(400, 800), v(400, 800)];
+      this.saturation.dispose();
+      if (currentState === 'city') {
+        const arr = [v(40, 70), v(10, 20), v(10, 20)];
+        this.online.dispose();
+        this.renderOnlineChart(arr);
+      } else {
+        this.online.dispose();
+      }
+      this.renderSaturationChart(data);
+    });
   };
   
   reloadAreaChart = (chart) => {
@@ -207,7 +214,107 @@ class rightContent extends Component {
     })
   };
 
+  hidInfo = () => {
+    this.setState({
+      showInfo: false,
+    });
+  };
+
+  showInfo = (index) => {
+    const personArr = [
+      {
+        name: '王刚',
+        phone: '15357001171',
+        address: '建博路街道收费员',
+      },
+      {
+        name: '李强',
+        phone: '15357002171',
+        address: '建博路街道收费员',
+      },
+      {
+        name: '张建明',
+        phone: '15347002112',
+        address: '建博路街道收费员',
+      },
+      {
+        name: '王富强',
+        phone: '15347502162',
+        address: '建博路街道收费员',
+      },
+      {
+        name: '陈国栋',
+        phone: '15341542162',
+        address: '建博路街道收费员',
+      },
+      {
+        name: '陈启明',
+        phone: '15324542162',
+        address: '建博路街道收费员',
+      },
+      {
+        name: '蔡成康',
+        phone: '185745842162',
+        address: '建博路街道收费员',
+      },
+      {
+        name: '周沁园',
+        phone: '136748802162',
+        address: '建博路街道收费员',
+      },
+    ];
+    this.setState({
+      showInfo: true,
+      workManInfo: personArr[index],
+    });
+  };
+  
+  renderCenter = () => {
+    const { currentState } = this.props;
+    const { showInfo, workManInfo } = this.state;
+    const stylePark = currentState === 'park' ? 'none' : 'block';
+    const styleCity = currentState === 'city' ? 'none' : 'block';
+    return (
+      <>
+        <div id="online-chart" style={{ display: stylePark }}>
+        </div>
+        <div className="work-man-wrap" style={{ display: styleCity }}>
+          <div className="work-man-distribution">
+            <div className="work-top">
+              {
+                [0, 1, 2, 3, 4, 5].map((_, index) => {
+                  return (
+                    <img alt="" src={worker} className="work-man" onMouseEnter={() => this.showInfo(index)} onMouseLeave={this.hidInfo} />
+                  );
+                })
+              }
+            </div>
+            <div className="work-left">
+              <img alt="" src={worker} className="work-man" onMouseEnter={() => this.showInfo(6)} onMouseLeave={this.hidInfo} />
+            </div>
+            <div className="work-right">
+              <img alt="" src={worker} className="work-man" onMouseEnter={() => this.showInfo(7)} onMouseLeave={this.hidInfo} />
+            </div>
+          </div>
+          {
+            showInfo ?
+            <div className="work-man-info">
+              <div className="info-line">
+                <span style={{ marginRight: 4 }}>{workManInfo.name}</span>
+                <span>{workManInfo.phone}</span>
+              </div>
+              <div className="info-content">{workManInfo.address}</div>
+            </div>
+            :null
+          }
+        </div>
+      </>
+    );
+  };
+
   render() {
+    const { currentState } = this.props;
+    const centerLabel = currentState === 'city' ? '设备在线率' : '在岗收费员';
     return (
       <div className="right-container">
         <div className="right-top">
@@ -217,10 +324,11 @@ class rightContent extends Component {
         </div>
         <div className="right-center">
           <div className="second-title">
-            设备在线率
+            {centerLabel}
           </div>
-          <div id="online-chart">
-          </div>
+          {
+            this.renderCenter()
+          }
         </div>
         <div className="right-bottom">
           <div className="second-title">消息告警</div>

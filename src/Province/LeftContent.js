@@ -91,6 +91,88 @@ class LeftContent extends Component {
     })
   };
 
+  renderVideo = (index) => {
+    return (
+      <div className="video-wrap">
+        
+      </div>
+    );
+  };
+
+  renderLeftBottom = () => {
+    const { currentState } = this.props;
+    if (currentState === 'city') {
+      return (
+        <>
+          <div className="second-title">排行榜tops</div>
+          <div className="panel-wrap">
+            <div className="panel-title">
+              <div className="list-title">订单数排行榜</div>
+              <div className="list-item-title">
+                <span className="title-one">名次</span>
+                <span className="title-second">停车场</span>
+                <span className="title-third">数量</span>
+              </div>
+            </div>
+            <div className="tab-wrap">
+              <Tabs
+                defaultActiveKey="1"
+                onChange={this.onTabChange}
+                tabPosition="bottom"
+              >
+                <TabPane tab={<span className="panel-dot"></span>} key="1">
+                  {this.renderParks(list1)}
+                </TabPane>
+                <TabPane tab={<span className="panel-dot"></span>} key="2">
+                  {this.renderParks(list2)}
+                </TabPane>
+                <TabPane tab={<span className="panel-dot"></span>} key="3">
+                  {this.renderParks(list3)}
+                </TabPane>
+                <TabPane tab={<span className="panel-dot"></span>} key="4">
+                  {this.renderParks(list4)}
+                </TabPane>
+                <TabPane tab={<span className="panel-dot"></span>} key="5">
+                  {this.renderParks(list5)}
+                </TabPane>
+              </Tabs>
+            </div>
+          </div>
+        </>
+      );
+    }
+    return (
+      <>
+        <div className="second-title">视频监控</div>
+        <div className="panel-wrap">
+          <div className="tab-wrap">
+            <Tabs
+              defaultActiveKey="1"
+              onChange={this.onTabChange}
+              tabPosition="bottom"
+            >
+              <TabPane tab={<span className="panel-dot"></span>} key="1">
+                {this.renderVideo(0)}
+              </TabPane>
+              <TabPane tab={<span className="panel-dot"></span>} key="2">
+                {this.renderVideo(1)}
+              </TabPane>
+              <TabPane tab={<span className="panel-dot"></span>} key="3">
+                {this.renderVideo(2)}
+              </TabPane>
+              <TabPane tab={<span className="panel-dot"></span>} key="4">
+                {this.renderVideo(3)}
+              </TabPane>
+              <TabPane tab={<span className="panel-dot"></span>} key="5">
+                {this.renderVideo(4)}
+              </TabPane>
+            </Tabs>
+          </div>
+        </div>
+      </>
+    );
+  };
+
   render() {
     return (
       <div className="left-container">
@@ -126,40 +208,9 @@ class LeftContent extends Component {
           </div>
         </div>
         <div className="left-bottom">
-          <div className="second-title">排行榜tops</div>
-          <div className="panel-wrap">
-            <div className="panel-title">
-              <div className="list-title">订单数排行榜</div>
-              <div className="list-item-title">
-                <span className="title-one">名次</span>
-                <span className="title-second">停车场</span>
-                <span className="title-third">数量</span>
-              </div>
-            </div>
-            <div className="tab-wrap">
-              <Tabs
-                defaultActiveKey="1"
-                onChange={this.onTabChange}
-                tabPosition="bottom"
-              >
-                <TabPane tab={<span className="panel-dot"></span>} key="1">
-                  {this.renderParks(list1)}
-                </TabPane>
-                <TabPane tab={<span className="panel-dot"></span>} key="2">
-                  {this.renderParks(list2)}
-                </TabPane>
-                <TabPane tab={<span className="panel-dot"></span>} key="3">
-                  {this.renderParks(list3)}
-                </TabPane>
-                <TabPane tab={<span className="panel-dot"></span>} key="4">
-                  {this.renderParks(list4)}
-                </TabPane>
-                <TabPane tab={<span className="panel-dot"></span>} key="5">
-                  {this.renderParks(list5)}
-                </TabPane>
-              </Tabs>
-            </div>
-          </div>
+          {
+            this.renderLeftBottom()
+          }
         </div>
       </div>
     );

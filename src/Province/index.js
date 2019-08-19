@@ -12,12 +12,17 @@ import './index.css';
 const moment = window.moment;
 const Option = Select.Option;
 
+const STATE_PARK = 'park';
+const STATE_CITY = 'city';
+
 class Map extends Component {
 
   state = {
     time: moment().format('YYYY年MMMDo dddd ah:mm'),
     currentAdcode: 500000,
     countryName: '重庆',
+    // currentState: STATE_CITY,
+    currentState: STATE_PARK,
   }
 
   init = true;
@@ -294,6 +299,9 @@ class Map extends Component {
   }
 
   handleChange = adcode => {
+    this.setState({
+      currentState: STATE_CITY,
+    });
     const { name } = country.find(({ adcode: code }) => code === adcode);
     this.setState({ currentAdcode: adcode, countryName: this.handleConutryName(name) });
     this.switch2AreaNode(adcode);
@@ -309,7 +317,6 @@ class Map extends Component {
   };
 
   reloadData = () => {
-    console.log('test');
     if (this.bottomRef) {
       this.bottomRef.reloadData();
     }
@@ -333,8 +340,15 @@ class Map extends Component {
     this.rightRef = ref;
   };
 
+  handleSelectPark = () => {
+    this.setState({
+      currentState: STATE_PARK,
+    });
+    this.reloadData();
+  };
+
   render() {
-    const { time, currentAdcode, countryName } = this.state;
+    const { time, currentAdcode, countryName, currentState } = this.state;
     return (
       <div className="container">
         <div id="top" className="top">
@@ -350,11 +364,15 @@ class Map extends Component {
           <div className="right-option">
             <Select
               style={{ width: 120 }}
-              // onChange={this.handleChange}
+              onChange={this.handleSelectPark}
               placeholder="请选择停车场"
               className="city-select"
             >
-              <Option value="test">至德路停车场</Option>
+              <Option value="0">半岛明珠停车场</Option>
+              <Option value="1">建博路停车场</Option>
+              <Option value="2">至德路停车场</Option>
+              <Option value="3">丰盛路停车场</Option>
+              <Option value="4">大足停车场</Option>
             </Select>
             <Select
               defaultValue={currentAdcode} // 重庆 500000
@@ -373,7 +391,7 @@ class Map extends Component {
         </div>
         <div id="center" className="center">
           <div id="left" className="left">
-            <LeftContent ref={this.getLeftRef} />
+            <LeftContent ref={this.getLeftRef} currentState={currentState} />
           </div>
           <div id="inner-center" className="inner-center">
             <div id="inner-top" className="inner-top">
@@ -400,7 +418,7 @@ class Map extends Component {
             </div>
           </div>
           <div id="right" className="right">
-            <RightContent ref={this.getRightRef} />
+            <RightContent ref={this.getRightRef} currentState={currentState} />
           </div>
         </div>
 

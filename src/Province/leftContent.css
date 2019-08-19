@@ -204,3 +204,96 @@
 .tab-wrap .ant-tabs-tab-active .panel-dot {
   background: #0D1F5A;
 }
+.video-wrap {
+  margin: 60px 0 20px 0;
+  width: 100%;
+  height: 216px;
+  background-image: url('../resource/image/video_background.png');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  cursor: pointer;
+}
+.work-man-wrap {
+  width: 100%;
+  height: 250px;
+  position: relative;
+}
+.work-man-distribution {
+  position: relative;
+  margin-top: 8px;
+  width: 236px;
+  height: 234px;
+  display: inline-block;
+  background-image: url('../resource/image/work_man_background.png');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+.work-top, .work-left, .work-right {
+  display: inline-block;
+  width: 56px;
+  height: 85px;
+  display: flex;
+  flex-wrap: wrap;
+}
+.work-top {
+  position: absolute;
+  top: 11px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.work-left {
+  position: absolute;
+  left: 35px;
+  bottom: 11px;
+}
+.work-right {
+  position: absolute;
+  right: 20px;
+  bottom: 11px;
+}
+.work-man {
+  height: 53px;
+  cursor: pointer;
+}
+.work-man:nth-child(1) {
+  margin-top: 10px;
+}
+.work-man:nth-child(2) {
+  margin-top: 5px;
+}
+.work-man:nth-child(3) {
+  margin-top: 0px;
+}
+.work-man:nth-child(4) {
+  margin-top: -31px;
+  transform: translateX(4px);
+}
+.work-man:nth-child(5) {
+  margin-top: -36px;
+  transform: translateX(4px);
+}
+.work-man:nth-child(6) {
+  margin-top: -41px;
+  transform: translateX(4px);
+}
+.work-man-info {
+  display: inline-block;
+  position: absolute;
+  right: 0;
+  top: 0;
+  background-image: url('../resource/image/work_man_3d.png');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  width: 140px;
+  height: 65px;
+}
+.info-line {
+  color: #fff;
+  font-size: 10px;
+  padding: 4px 8px;
+}
+.info-content {
+  color: #fff;
+  font-size: 10px;
+  padding: 4px 8px;
+}
