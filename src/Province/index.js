@@ -7,6 +7,8 @@ import LeftContent from './LeftContent';
 import RightContent from './RightContent';
 import BottomContent from './BottomContent';
 import country from '../resource/data/country.js';
+import Number from './Component/Number';
+import CountUp from 'react-countup';
 import './index.css';
 
 const moment = window.moment;
@@ -25,6 +27,8 @@ class Map extends Component {
     countryName: '重庆',
     currentState: STATE_CITY,
     // currentState: STATE_PARK,
+    startMoney: 2301.12,
+    endMoney: 3411.09,
   }
 
   init = true;
@@ -375,7 +379,21 @@ class Map extends Component {
         switch2AreaNode(currentAdcode);
         _this.switch2AreaNode = switch2AreaNode;
     });
+    this.moneyAdd();
   }
+
+  moneyAdd = () => {
+    const time = 3000 + parseInt(Math.random() * 4000);
+    setTimeout(() => {
+      const { endMoney } = this.state;
+      const newMoney = endMoney + parseFloat((30 + Math.random() * 30).toFixed(2));
+      this.setState({
+        startMoney: endMoney,
+        endMoney: newMoney,
+      });
+      this.moneyAdd();
+    }, time);
+  };
 
   onAreaClick = () => {
     this.setState({
@@ -434,7 +452,7 @@ class Map extends Component {
   };
 
   render() {
-    const { time, currentAdcode, countryName, currentState } = this.state;
+    const { time, currentAdcode, countryName, currentState, startMoney, endMoney } = this.state;
     const isPark = currentState === STATE_PARK;
     return (
       <div className="container">
@@ -482,16 +500,41 @@ class Map extends Component {
           </div>
           <div id="inner-center" className="inner-center">
             <div id="inner-top" className="inner-top">
-              <div className="total-price-wrap">
-                <div className="card-number">4</div>
-                <div className="card-number">3</div>
-                <div className="card-number">3</div>
-                <div className="card-number no-margin">8</div>
-                <div className="dot"></div>
-                <div className="card-number">2</div>
-                <div className="card-number">8</div>
-                <div className="price-unit">元</div>
-              </div>
+              {/* <div className="total-price-wrap"> */}
+                <CountUp
+                  className="total-price-wrap"
+                  start={startMoney}
+                  end={endMoney}
+                  duration={2}
+                  formattingFn={(value) => {
+                    const str = value.toFixed(2).split('');
+                    const len = str.length;
+                    const arr = str.map((i, idx) => {
+                      if (i === '.') {
+                        return `<div class="dot"></div>`;
+                      }
+                      const style = idx === len - 3 ? 'no-margin' : '';
+                      return (
+                        `<div class="card-number ${style}">${i}</div>`
+                      );
+                    });
+                    arr.push(`<div class="price-unit">元</div>`);
+                    return arr.join('');
+                  }}
+                  decimals={2}
+                >
+                </CountUp>
+                {/*
+                  <div className="card-number">4</div>
+                  <div className="card-number">3</div>
+                  <div className="card-number">3</div>
+                  <div className="card-number no-margin">8</div>
+                  <div className="dot"></div>
+                  <div className="card-number">2</div>
+                  <div className="card-number">8</div>
+                  <div className="price-unit">元</div>
+                */}
+              {/* </div> */}
             </div>
             {
               isPark ? 
