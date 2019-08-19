@@ -56,6 +56,8 @@ class Map extends Component {
       keyboardEnable: false,
       scrollWheel: true,
       touchZoom: false,
+      // viewMode: "3D", //开启3D视图,默认为关闭
+      // pitch: 60,
     });
     const a = map.getLayers();
     map.remove(a);
@@ -78,9 +80,10 @@ class Map extends Component {
         //     offset: new window.AMap.Pixel(0, 0),
         //     bubble: true
         // });
-
-        //根据Hover状态设置相关样式
-        function toggleHoverFeature(feature, isHover, position) {
+        const setListener = () => {
+          
+          //根据Hover状态设置相关样式
+          function toggleHoverFeature(feature, isHover, position) {
 
             // tipMarker.setMap(isHover ? map : null);
 
@@ -125,13 +128,16 @@ class Map extends Component {
         districtExplorer.on('featureClick', function(e, feature) {
 
           var props = feature.properties;
-
           //如果存在子节点
           if (props.childrenNum > 0) {
             //切换聚焦区域
             switch2AreaNode(props.adcode);
+          } else {
+            renderBottomFeature(feature);
+            _this.onAreaClick(feature);
           }
         });
+      }
 
         //外部区域被点击
         // districtExplorer.on('outsideClick', function(e) {
@@ -170,6 +176,82 @@ class Map extends Component {
             });
             map.add(marker);
           });
+        }
+
+        /**
+         * 县级区级尺度
+         */
+        const renderBottomFeature = (feature) => {
+          
+          //清除已有的绘制内容
+          districtExplorer.clearFeaturePolygons();
+
+          map.clearMap();
+          
+          districtExplorer.renderFeature(feature, {
+            cursor: 'default',
+            bubble: true,
+            strokeColor: '#016CAA', //线颜色
+            strokeOpacity: 1, //线透明度
+            strokeWeight: 1, //线宽
+            fillColor: '#004074', //填充色
+            fillOpacity: 1, //填充透明度
+          });
+          const polygons = districtExplorer.getAllFeaturePolygons();
+          map.setFitView(polygons, true, [50, 50, 100, 100]);
+          districtExplorer.off('featureMouseout featureMouseover featureMousemove featureClick');
+          const marker = new window.AMap.Marker({
+            position: get(feature, 'properties.center'),
+            anchor: 'center',
+            content: `<div class='wave solid dot-blue'><div class='circle'></div><div class='content fa fa-bell'><i class=''></i></div></div>`,
+            label: {
+              content: `<div class='parkName'>${get(feature, 'properties.name')}</div>`,
+              direction: 'bottom',
+            },
+            offset: new window.AMap.Pixel(0, 0),
+            bubble: true,
+          });
+          map.add(marker);
+          const p = polygons[0];
+          const path = p.getPath()[0] || [];
+          let park = findPark(path, p);
+          if (!park || park.length === 0) park = findPark(path, p);
+          if (!park || park.length === 0) park = findPark(path, p);
+          if (!park || park.length === 0) park = findPark(path, p);
+          
+          park.forEach((i) => {
+            const m = new window.AMap.Marker({
+              position: i,
+              anchor: 'center',
+              content: `<div class='wave solid dot-yellow'><div class='circle'></div><div class='content fa fa-bell'><i class=''></i></div></div>`,
+              label: {
+                content: `<div class='parkName'>${'智能停车场'}</div>`,
+                direction: 'bottom',
+              },
+              offset: new window.AMap.Pixel(0, 0),
+              bubble: false,
+            });
+            m.on('click', () => {
+              _this.handleSelectPark();
+            });
+            map.add(m);
+          });
+        }
+
+        const findPark = (path, p) => {
+          
+          return [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(() => getRandomPoint(path))
+            .filter((i) => p.contains(i))
+        }
+
+        const getRandomPoint = (path) => {
+          const index = parseInt(Math.random() * path.length, 10);
+          const { lat, lng } = path[index];
+          const p = new AMap.LngLat(lng, lat);
+          const ln = Math.random() * 10000;
+          const la = Math.random() * 10000;
+          const offset = p.offset(1000 + ln * 5, 1000 + la * 5);
+          return offset;
         }
 
         //绘制某个区域的边界
@@ -232,6 +314,8 @@ class Map extends Component {
         //切换区域
         function switch2AreaNode(adcode, callback) {
 
+            setListener();
+
             if (currentAreaNode && ('' + currentAreaNode.getAdcode() === '' + adcode)) {
                 return;
             }
@@ -293,6 +377,13 @@ class Map extends Component {
     });
   }
 
+  onAreaClick = () => {
+    this.setState({
+      currentState: STATE_PARK,
+    });
+    this.reloadData();
+  };
+
   handleChange = adcode => {
     this.setState({
       currentState: STATE_CITY,
@@ -300,6 +391,13 @@ class Map extends Component {
     const { name } = country.find(({ adcode: code }) => code === adcode);
     this.setState({ currentAdcode: adcode, countryName: this.handleConutryName(name) });
     this.switch2AreaNode(adcode);
+  };
+
+  handleSelectPark = () => {
+    this.setState({
+      currentState: STATE_PARK,
+    });
+    this.reloadData();
   };
 
   handleConutryName = (name) => {
@@ -335,15 +433,9 @@ class Map extends Component {
     this.rightRef = ref;
   };
 
-  handleSelectPark = () => {
-    this.setState({
-      currentState: STATE_PARK,
-    });
-    this.reloadData();
-  };
-
   render() {
     const { time, currentAdcode, countryName, currentState } = this.state;
+    const isPark = currentState === STATE_PARK;
     return (
       <div className="container">
         <div id="top" className="top">
@@ -401,13 +493,23 @@ class Map extends Component {
                 <div className="price-unit">元</div>
               </div>
             </div>
-            <div id="map-center" className="map-center">
-              <div className="map-legend">
-                <div className="legend-item">严重区</div>
-                <div className="legend-item yellow">较严重区</div>
-                <div className="legend-item blue">非严重区</div>
+            {
+              isPark ? 
+              <div id="map-center" className="map-center">
+                <div className="map-legend">
+                  <div className="legend-item blue">地域名</div>
+                  <div className="legend-item yellow">停车场</div>
+                </div>
               </div>
-            </div>
+              :
+              <div id="map-center" className="map-center">
+                <div className="map-legend">
+                  <div className="legend-item">严重区</div>
+                  <div className="legend-item yellow">较严重区</div>
+                  <div className="legend-item blue">非严重区</div>
+                </div>
+              </div>
+            }
             <div id="inner-bottom" className="inner-bottom">
               <BottomContent ref={this.getBottomRef} />
             </div>

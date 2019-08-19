@@ -145,9 +145,11 @@ class LeftContent extends Component {
 
   renderVideo = (index) => {
     return (
-      <div className="video-wrap">
-        
-      </div>
+      <>
+        <div className={`video-wrap video-${index}`}>
+          
+        </div>
+      </>
     );
   };
 
