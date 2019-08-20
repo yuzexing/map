@@ -513,7 +513,7 @@ class Map extends Component {
                       if (i === '.') {
                         return `<div class="dot"></div>`;
                       }
-                      const style = idx === len - 3 ? 'no-margin' : '';
+                      const style = idx === (len - 4) ? 'no-margin' : '';
                       return (
                         `<div class="card-number ${style}">${i}</div>`
                       );
