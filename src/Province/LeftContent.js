@@ -63,7 +63,7 @@ class LeftContent extends Component {
       this.setState({
         tab: newTab,
       });
-    }, 3000);
+    }, 6000);
   }
 
   renderIcomeChart = (data1, data2) => {

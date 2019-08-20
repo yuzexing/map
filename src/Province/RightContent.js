@@ -46,8 +46,8 @@ class rightContent extends Component {
         show: false,
       },
       tooltip: {
-        backgroundColor:'#23F5F0',
-        borderColor: '#23F5F0',
+        backgroundColor:'#1dc3bf',
+        borderColor: '#1dc3bf',
         textStyle: {
           fontSize: 14,
           color: '#FFFFFF',

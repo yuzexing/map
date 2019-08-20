@@ -59,7 +59,7 @@ body {
   background: orange;
 }
 .wave.solid.dot-red {
-  color: #f86705;
+  color: #D94F20;
 }
 .wave.solid.dot-yellow {
   color: #ecd220;
@@ -68,7 +68,7 @@ body {
   color: #00a0e9;
 }
 .wave.solid.dot-red .circle {
-  background: #f86705;
+  background: #D94F20;
 }
 .wave.solid.dot-yellow .circle {
   background: #ecd220;
@@ -77,7 +77,7 @@ body {
   background: #00a0e9;
 }
 .wave.solid.dot-red .fa-bell {
-  background: #f86705;
+  background: #D94F20;
 }
 .wave.solid.dot-yellow .fa-bell {
   background: #ecd220;
@@ -306,7 +306,7 @@ body {
   width: 18px;
   height: 18px;
   display: inline-block;
-  background-color: #f86705;
+  background-color: #D94F20;
   border-radius: 50%;
   margin-right: 16px;
 }
