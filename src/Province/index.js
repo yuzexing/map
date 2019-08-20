@@ -7,7 +7,6 @@ import LeftContent from './LeftContent';
 import RightContent from './RightContent';
 import BottomContent from './BottomContent';
 import country from '../resource/data/country.js';
-import Number from './Component/Number';
 import CountUp from 'react-countup';
 import './index.css';
 
