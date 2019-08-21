@@ -17,17 +17,20 @@ const Option = Select.Option;
 const STATE_PARK = 'park';
 const STATE_CITY = 'city';
 
+const initCity = '重庆';
+
 
 class Map extends Component {
 
   state = {
     time: moment().format('YYYY年MMMDo dddd ah:mm'),
     currentAdcode: 500000,
-    countryName: '重庆',
+    countryName: initCity,
     currentState: STATE_CITY,
     // currentState: STATE_PARK,
     startMoney: 2301.12,
     endMoney: 3411.09,
+    breadList: [{ name: initCity, adcode: 500000 }],
   }
 
   init = true;
@@ -84,6 +87,8 @@ class Map extends Component {
         //     bubble: true
         // });
         const setListener = () => {
+
+          districtExplorer.off('featureMouseout featureMouseover featureMousemove featureClick');
           
           //根据Hover状态设置相关样式
           function toggleHoverFeature(feature, isHover, position) {
@@ -135,9 +140,10 @@ class Map extends Component {
           if (props.childrenNum > 0) {
             //切换聚焦区域
             switch2AreaNode(props.adcode);
+            _this.onAreaClick(feature, false);
           } else {
             renderBottomFeature(feature);
-            _this.onAreaClick(feature);
+            _this.onAreaClick(feature, true);
           }
         });
       }
@@ -185,6 +191,14 @@ class Map extends Component {
          * 县级区级尺度
          */
         const renderBottomFeature = (feature) => {
+          districtExplorer.loadAreaNode(feature.properties.adcode, (error, areaNode) => {
+            currentAreaNode = window.currentAreaNode = areaNode;
+
+            //设置当前使用的定位用节点
+            districtExplorer.setAreaNodesForLocating([currentAreaNode]);
+            console.log(error);
+            console.log(areaNode);
+          });
           
           //清除已有的绘制内容
           districtExplorer.clearFeaturePolygons();
@@ -394,10 +408,21 @@ class Map extends Component {
     }, time);
   };
 
-  onAreaClick = () => {
-    this.setState({
-      currentState: STATE_PARK,
+  onAreaClick = (feature, selectPark) => {
+    const { name, adcode } = get(feature, 'properties');
+    const { breadList } = this.state;
+    breadList.push({
+      name,
+      adcode,
     });
+    this.setState({
+      breadList,
+    });
+    if (selectPark) {
+      this.setState({
+        currentState: STATE_PARK,
+      });
+    }
     this.reloadData();
   };
 
@@ -406,11 +431,42 @@ class Map extends Component {
       currentState: STATE_CITY,
     });
     const { name } = country.find(({ adcode: code }) => code === adcode);
-    this.setState({ currentAdcode: adcode, countryName: this.handleConutryName(name) });
+    this.setState({
+      currentAdcode: adcode,
+      countryName: this.handleConutryName(name),
+      breadList: [{name, adcode}],
+    });
     this.switch2AreaNode(adcode);
   };
 
-  handleSelectPark = () => {
+  handleSelectPark = (a, b) => {
+    if (b) {
+      const breadList = [
+        {
+          name: initCity,
+          adcode: 500000,
+        },
+        {
+          name: '大足区',
+          adcode: 500111,
+        },
+        {
+          name: b.props.children,
+        },
+      ];
+      this.setState({
+        breadList,
+      });
+    } else {
+      const { breadList } = this.state;
+      const newList = breadList.filter(({ adcode }) => adcode);
+      newList.push({
+        name: '智能停车场',
+      });
+      this.setState({
+        breadList: newList,
+      });
+    }
     this.setState({
       currentState: STATE_PARK,
     });
@@ -450,9 +506,19 @@ class Map extends Component {
     this.rightRef = ref;
   };
 
+  switch2Adcode = (adcode, index) => {
+    const { breadList } = this.state;
+    const newBread = breadList.slice(0, index + 1);
+    this.setState({
+      breadList: newBread,
+    });
+    this.switch2AreaNode(adcode);
+  };
+
   render() {
-    const { time, currentAdcode, countryName, currentState, startMoney, endMoney } = this.state;
+    const { time, currentAdcode, countryName, currentState, startMoney, endMoney, breadList } = this.state;
     const isPark = currentState === STATE_PARK;
+    const breadListLen = breadList.length;
     return (
       <div className="container">
         <div id="top" className="top">
@@ -464,15 +530,25 @@ class Map extends Component {
               </span>
             </div>
             <Breadcrumb>
-              <Breadcrumb.Item>
-                <span className="bread-item">Home</span>
+            {
+              breadList.map(({ name, adcode }, index) => {
+                const canClick = index !== (breadListLen - 1);
+                return (
+                  <Breadcrumb.Item>
+                    <span className={`bread-item ${canClick ? 'active' : ''}`} onClick={canClick ? () => this.switch2Adcode(adcode, index) : null}>{name}</span>
+                  </Breadcrumb.Item>
+                );
+              })
+            }
+              {/* <Breadcrumb.Item>
+                <span className="bread-item" onClick={this.click}>Home</span>
               </Breadcrumb.Item>
               <Breadcrumb.Item>
                 <span className="bread-item">Home2</span>
               </Breadcrumb.Item>
               <Breadcrumb.Item>
                 <span className="bread-item">Home2</span>
-              </Breadcrumb.Item>
+              </Breadcrumb.Item> */}
             </Breadcrumb>
           </div>
           <div className="title">

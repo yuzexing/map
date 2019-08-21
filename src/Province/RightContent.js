@@ -76,7 +76,7 @@ class rightContent extends Component {
         return;
       }
       ++this.workManIndex;
-      if (this.workManIndex > personArr.length) {
+      if (this.workManIndex > personArr.length - 1) {
         this.workManIndex = 0;
       }
       this.setState({

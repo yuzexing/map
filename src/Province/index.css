@@ -352,9 +352,11 @@ body {
 }
 .bread-item {
   color: #81849f;
+}
+.bread-item.active {
   cursor: pointer;
 }
-.bread-item:hover {
+.bread-item.active:hover {
   color: #57c8ee;
 }
 .ant-breadcrumb-separator {

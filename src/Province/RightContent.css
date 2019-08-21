@@ -66,3 +66,9 @@
   overflow: auto;
   margin-top: 30px;
 }
+.info-content {
+  color: #c5c7cb;
+}
+.info-line {
+  white-space: nowrap;
+}
