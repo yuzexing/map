@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import get from 'lodash/get';
 import { Tabs } from 'antd';
 import Echart from 'echarts';
+import CountUp from 'react-countup';
 import imgNumber from '../resource/image/park_number.png';
 import imgSeat from '../resource/image/park_seat.png';
 import { list1, list2, list3, list4, list5, list6 } from '../resource/data/parkList';
@@ -46,7 +47,8 @@ class LeftContent extends Component {
 
   state = {
     seatNumber: 601,
-    seatAmount: 412,
+    startSeatAmount: 0,
+    endSeatAmount: 412,
     tab: 0,
   }
 
@@ -64,7 +66,25 @@ class LeftContent extends Component {
         tab: newTab,
       });
     }, 6000);
+    this.seatAomuntAdd();
   }
+
+  seatAomuntAdd = () => {
+    const time = 3000 + parseInt(Math.random() * 5000);
+    setTimeout(() => {
+      const add = Math.random() < 0.5;
+      const { endSeatAmount, seatNumber } = this.state;
+      let newEnd = endSeatAmount + (parseInt(2 + Math.random() * 3) * (add ? 1 : -1));
+      if (newEnd > seatNumber) {
+        newEnd = seatNumber;
+      }
+      this.setState({
+        startSeatAmount: endSeatAmount,
+        endSeatAmount: newEnd,
+      });
+      this.seatAomuntAdd();
+    }, time);
+  };
 
   renderIcomeChart = (data1, data2) => {
     const income = Echart.init(document.getElementById('hour-income-chart'), 'customed');
@@ -122,9 +142,12 @@ class LeftContent extends Component {
   
   reloadData = () => {
     this.reloadChart(this.income);
+    const number = 200 + parseInt(Math.random() * 300);
+    const endSeatAmount = 0 + parseInt(Math.random() * number);
     this.setState({
-      seatNumber: 100 + parseInt(Math.random() * 600),
-      seatAmount: 100 + parseInt(Math.random() * 1000),
+      seatNumber: number,
+      startSeatAmount: 0,
+      endSeatAmount,
       tab: 0,
     });
   };
@@ -171,7 +194,6 @@ class LeftContent extends Component {
         }
       </>
     );
-    // return 
   };
 
   renderVideo = (index) => {
@@ -190,11 +212,10 @@ class LeftContent extends Component {
     if (currentState === 'city') {
       return (
         <>
-          <div className="second-title">排行榜tops</div>
+          <div className="second-title">排行榜topN</div>
           <div className="panel-wrap">
             <div className="tab-wrap">
               <Tabs
-                // defaultActiveKey="0"
                 onChange={this.onTabChange}
                 activeKey={String(tab)}
                 tabPosition="bottom"
@@ -244,7 +265,7 @@ class LeftContent extends Component {
   };
 
   render() {
-    const { seatNumber, seatAmount } = this.state;
+    const { seatNumber, startSeatAmount, endSeatAmount } = this.state;
     return (
       <div className="left-container">
         <div className="left-top">
@@ -272,7 +293,13 @@ class LeftContent extends Component {
               <div className="number-image-wrap">
                 <img className="image-number" alt="" src={imgNumber} />
                 <div className="park-amount">
-                  <span className="liang-unit">{seatAmount}</span>
+                <CountUp
+                  className="liang-unit"
+                  start={startSeatAmount}
+                  end={endSeatAmount}
+                  duration={2}
+                >
+                </CountUp>
                 </div>
               </div>
             </div>

@@ -144,7 +144,7 @@ class rightContent extends Component {
           color: '#FFFFFF',
         },
         padding: [2, 5, 2, 5],
-        formatter: '{c}',
+        formatter: ({ percent }) => `${percent}%`,
       },
       series : [
         {

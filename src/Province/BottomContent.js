@@ -462,7 +462,7 @@ class LeftContent extends Component {
           <div className="bottom-chart-title">
             <div>逃逸率/逃费率</div>
             <div className="bottom-legend">
-              <div className="money">金钱</div>
+              <div className="money">金额</div>
               <div className="car">车辆</div>
             </div>
           </div>
