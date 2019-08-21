@@ -189,6 +189,8 @@ body {
 .top-line {
   padding: 12px 66px 0 66px;
   display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 .time {
   color: #BEC3D4;
@@ -341,4 +343,23 @@ body {
 }
 .count-up {
   color: #fff;
+}
+
+.right-crumbs {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.bread-item {
+  color: #81849f;
+  cursor: pointer;
+}
+.bread-item:hover {
+  color: #57c8ee;
+}
+.ant-breadcrumb-separator {
+  color: #81849f;
+}
+.ant-breadcrumb {
+  min-width: 220px;
 }

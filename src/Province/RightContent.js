@@ -7,24 +7,91 @@ import worker from '../resource/image/work_man.png';
 import './RightContent.css';
 
 
+const personArr = [
+  {
+    name: '王刚',
+    phone: '15357001171',
+    address: '建博路街道收费员',
+  },
+  {
+    name: '李强',
+    phone: '15357002171',
+    address: '建博路街道收费员',
+  },
+  {
+    name: '张建明',
+    phone: '15347002112',
+    address: '建博路街道收费员',
+  },
+  {
+    name: '王富强',
+    phone: '15347502162',
+    address: '建博路街道收费员',
+  },
+  {
+    name: '陈国栋',
+    phone: '15341542162',
+    address: '建博路街道收费员',
+  },
+  {
+    name: '陈启明',
+    phone: '15324542162',
+    address: '建博路街道收费员',
+  },
+  {
+    name: '蔡成康',
+    phone: '185745842162',
+    address: '建博路街道收费员',
+  },
+  {
+    name: '周沁园',
+    phone: '136748802162',
+    address: '建博路街道收费员',
+  },
+];
+
+
 class rightContent extends Component {
 
+  workManIndex = 0;
+
   state = {
-    showInfo: false,
+    showInfo: true,
+    workManInfo: personArr[0],
   }
+
 
   componentDidMount() {
     const data = [820, 932, 780, 934, 1290, 900];
     this.renderSaturationChart(data);
     this.renderOnlineChart([90, 20, 40]);
     this.scrollKey = requestAnimationFrame(this.autoScroll);
+    this.autoChange();
+  }
+
+  autoChange = () => {
+    setInterval(() => {
+      const { currentState } = this.props;
+      if (currentState === 'city') {
+        return;
+      }
+      ++this.workManIndex;
+      if (this.workManIndex > personArr.length) {
+        this.workManIndex = 0;
+      }
+      this.setState({
+        workManInfo: personArr[this.workManIndex],
+      });
+    }, 6000);
   }
 
   autoScroll = () => {
-    const top = this.ref.scrollTop;
-    this.ref.scrollTop = top + 1;
-    if (top === this.ref.scrollTop) {
-      this.ref.scrollTop = 0;
+    if (this.ref) {
+      const top = this.ref.scrollTop;
+      this.ref.scrollTop = top + 1;
+      if (top === this.ref.scrollTop) {
+        this.ref.scrollTop = 0;
+      }
     }
     this.scrollKey = requestAnimationFrame(this.autoScroll);
   };
@@ -267,52 +334,10 @@ class rightContent extends Component {
   };
 
   showInfo = (index) => {
-    const personArr = [
-      {
-        name: '王刚',
-        phone: '15357001171',
-        address: '建博路街道收费员',
-      },
-      {
-        name: '李强',
-        phone: '15357002171',
-        address: '建博路街道收费员',
-      },
-      {
-        name: '张建明',
-        phone: '15347002112',
-        address: '建博路街道收费员',
-      },
-      {
-        name: '王富强',
-        phone: '15347502162',
-        address: '建博路街道收费员',
-      },
-      {
-        name: '陈国栋',
-        phone: '15341542162',
-        address: '建博路街道收费员',
-      },
-      {
-        name: '陈启明',
-        phone: '15324542162',
-        address: '建博路街道收费员',
-      },
-      {
-        name: '蔡成康',
-        phone: '185745842162',
-        address: '建博路街道收费员',
-      },
-      {
-        name: '周沁园',
-        phone: '136748802162',
-        address: '建博路街道收费员',
-      },
-    ];
-    this.setState({
-      showInfo: true,
-      workManInfo: personArr[index],
-    });
+    // this.setState({
+    //   showInfo: true,
+    //   workManInfo: personArr[index],
+    // });
   };
   
   renderCenter = () => {
@@ -330,16 +355,16 @@ class rightContent extends Component {
               {
                 [0, 1, 2, 3, 4, 5].map((_, index) => {
                   return (
-                    <img alt="" src={worker} className="work-man" onMouseEnter={() => this.showInfo(index)} onMouseLeave={this.hidInfo} />
+                    <img alt="" src={worker} className="work-man" /* onMouseEnter={() => this.showInfo(index)} onMouseLeave={this.hidInfo} */ />
                   );
                 })
               }
             </div>
             <div className="work-left">
-              <img alt="" src={worker} className="work-man" onMouseEnter={() => this.showInfo(6)} onMouseLeave={this.hidInfo} />
+              <img alt="" src={worker} className="work-man" /* onMouseEnter={() => this.showInfo(6)} onMouseLeave={this.hidInfo}  *//>
             </div>
             <div className="work-right">
-              <img alt="" src={worker} className="work-man" onMouseEnter={() => this.showInfo(7)} onMouseLeave={this.hidInfo} />
+              <img alt="" src={worker} className="work-man" /* onMouseEnter={() => this.showInfo(7)} onMouseLeave={this.hidInfo}  *//>
             </div>
           </div>
           {

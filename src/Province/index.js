@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import get from 'lodash/get';
-import { Select } from 'antd';
+import { Select, Breadcrumb } from 'antd';
 import image from '../resource/image/logo.png';
 import location from '../resource/image/location.png';
 import LeftContent from './LeftContent';
@@ -457,10 +457,23 @@ class Map extends Component {
       <div className="container">
         <div id="top" className="top">
           <div className="top-line">
-            <img alt="" src={image} className="logo" />
-            <span className="time">
-              {time}
-            </span>
+            <div>
+              <img alt="" src={image} className="logo" />
+              <span className="time">
+                {time}
+              </span>
+            </div>
+            <Breadcrumb>
+              <Breadcrumb.Item>
+                <span className="bread-item">Home</span>
+              </Breadcrumb.Item>
+              <Breadcrumb.Item>
+                <span className="bread-item">Home2</span>
+              </Breadcrumb.Item>
+              <Breadcrumb.Item>
+                <span className="bread-item">Home2</span>
+              </Breadcrumb.Item>
+            </Breadcrumb>
           </div>
           <div className="title">
             {countryName}智慧停车大数据平台
