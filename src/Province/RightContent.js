@@ -318,7 +318,7 @@ class rightContent extends Component {
   renderParks = (data) => {
     return data.map(({ no, paName, amount }) => {
       return (
-        <div className="list-item">
+        <div className="list-item" key={no+paName}>
           <span className="item-one">{no}</span>
           <span className="item-second">{paName}</span>
           <span className="item-third">{amount}</span>
@@ -355,7 +355,7 @@ class rightContent extends Component {
               {
                 [0, 1, 2, 3, 4, 5].map((_, index) => {
                   return (
-                    <img alt="" src={worker} className="work-man" /* onMouseEnter={() => this.showInfo(index)} onMouseLeave={this.hidInfo} */ />
+                    <img alt="" src={worker} className="work-man" key={_} /* onMouseEnter={() => this.showInfo(index)} onMouseLeave={this.hidInfo} */ />
                   );
                 })
               }

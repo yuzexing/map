@@ -443,12 +443,12 @@ class LeftContent extends Component {
       <div className="bottom-content">
         <div id="use-chart-wrap">
           <div className="line-chart-wrap">
-            <div className="use-chart-title">吞吐量</div>
+            <div className="use-chart-title">利用率</div>
             <div id="swallow-chart"></div>
             <div className="rate">64%</div>
           </div>
           <div className="line-chart-wrap">
-            <div className="use-chart-title">利用率</div>
+            <div className="use-chart-title">吞吐量</div>
             <div id="use-chart"></div>
             <div className="rate">58%</div>
           </div>
