@@ -50,9 +50,17 @@ class Map extends Component {
         });
       }
     }, 1000);
+    const time = 1000 * 60 * 60 * 2;
+    setTimeout(() => {
+      window.location.reload(true);
+    }, time);
     // 统计初始化数据
     // 市总金额
-    this.state.endMoney = 12826;
+    this.state.endMoney = parseInt(12826 * this.getTimeRate());
+  }
+
+  getTimeRate = () => {
+    return moment().hour() / 24;
   }
 
   componentDidMount() {
@@ -342,7 +350,7 @@ class Map extends Component {
     const time = 8000 + parseInt(Math.random() * 10000);
     setTimeout(() => {
       const { endMoney } = this.state;
-      const newMoney = parseInt(endMoney) + parseInt((10 + Math.random() * 10));
+      const newMoney = parseInt(endMoney) + parseInt((0 + Math.random() * 10));
       this.setState({
         startMoney: +endMoney,
         endMoney: +newMoney,
@@ -603,7 +611,7 @@ class Map extends Component {
   indexReloadData = (level, name) => {
     if (level === 0) {
       this.setState({
-        endMoney: 12826,
+        endMoney: parseInt(12826 * this.getTimeRate()),
         startMoney: 8000,
       });
     } else if (level === 1) {
@@ -614,8 +622,9 @@ class Map extends Component {
         沙坪坝区: '602',
         渝北区: '100',
       };
+      
       this.setState({
-        endMoney: +map[name] || 0,
+        endMoney: parseInt((+map[name] || 0) * this.getTimeRate()),
         startMoney: 500,
       });
     } else {
@@ -624,7 +633,7 @@ class Map extends Component {
         const item = list[0] || {};
         const taget = parkOrderList.find(({ name: paName }) => paName.includes(item.name) || item.name.includes(paName)) || {};
         this.setState({
-          endMoney: +taget.income || 0,
+          endMoney: parseInt((+taget.income || 0) * this.getTimeRate()),
           startMoney: 0,
         });
       } else {
@@ -667,7 +676,13 @@ class Map extends Component {
     this.setState({
       breadList: newBread,
     });
+    if (index !== 2) {
+      this.setState({
+        currentState: STATE_CITY,
+      });
+    }
     if (/* this.state.currentState === STATE_PARK && */ this.currentAreaAdcode == adcode) {
+      
     } else {
       this.changeMap();
       this.setState({
@@ -773,6 +788,12 @@ class Map extends Component {
                       `<div class="card-number ${style}">${i}</div>`
                     );
                   });
+                  if (len < 5) {
+                    const diff = 5-len;
+                    Array(diff).fill(0).forEach(() => {
+                      arr.unshift(`<div class="card-number"></div>`);
+                    });
+                  }
                   arr.push(`<div class="price-unit">元</div>`);
                   return arr.join('');
                 }}

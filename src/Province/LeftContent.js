@@ -60,18 +60,18 @@ class LeftContent extends Component {
   }
 
   componentDidMount() {
-    // setInterval(() => {
-    //   const { tab } = this.state;
-    //   const { currentState } = this.props;
-    //   const max = currentState === 'city' ? 5 : 4;
-    //   let newTab = tab + 1; 
-    //   if (newTab > max) {
-    //     newTab = 0;
-    //   }
-    //   this.setState({
-    //     tab: newTab,
-    //   });
-    // }, 6000);
+    setInterval(() => {
+      const { tab } = this.state;
+      const { currentState } = this.props;
+      const max = currentState === 'city' ? 5 : 4;
+      let newTab = tab + 1; 
+      if (newTab > max) {
+        newTab = 0;
+      }
+      this.setState({
+        tab: newTab,
+      });
+    }, 6000);
     this.seatAomuntAdd();
   }
 

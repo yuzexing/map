@@ -28,6 +28,58 @@ const originPerson = [
   {"name":"冯伟","phone":"17623401021"},
 ];
 
+const city = [
+  {"type":"通知","level":"市","content":"大足区大荣路停车场车位饱和度已达100%"},
+  {"type":"通知","level":"市","content":"大足区双塔路停车场车位饱和度已达100%"},
+  {"type":"通知","level":"市","content":"沙坪坝区景阳路停车场车位饱和度已达100%"},
+  {"type":"通知","level":"市","content":"区温州商贸城西停车场车位饱和度已达100%"},
+  {"type":"告警","level":"市","content":"大足区大荣路停车场A-003停车位车辆疑似违停，请现场人员注意查看确认"},
+  {"type":"告警","level":"市","content":"大足区大荣路停车场A-003停车位停车已超过7天，疑似僵尸车，请注意"},
+  {"type":"告警","level":"市","content":"江北区新城绿洲地面停车场C-053停车位停车已超过3天，疑似僵尸车，请注意"},
+  {"type":"告警","level":"市","content":"沙坪坝区国鑫路停车场B-021停车位停车已超过5天，疑似僵尸车，请注意"},
+  {"type":"告警","level":"市","content":"大足区碧玉江南停车场车A-046停车位检器硬件故障，请维修人员注意查看确认"},
+  {"type":"告警","level":"市","content":"渝AM***7疑似逃逸，请现场人员注意查看确认"},
+  {"type":"告警","level":"市","content":"渝BV***6疑似逃逸，请现场人员注意查看确认"},
+  {"type":"告警","level":"市","content":"渝D9***8疑似逃逸，请现场人员注意查看确认"},
+];
+
+const area = [
+  {"type":"通知","level":"区","content":"龙都花园A栋停车场车位饱和度已达100%"},
+  {"type":"通知","level":"区","content":"香榭雅筑停车场车位饱和度已达100%"},
+  {"type":"通知","level":"区","content":"锦绣南山停车场车位饱和度已达100%"},
+  {"type":"通知","level":"区","content":"西城国际停车场车位饱和度已达100%"},
+  {"type":"告警","level":"区","content":"碧玉江南停车场A-023停车位车辆疑似违停，请现场人员注意查看确认"},
+  {"type":"告警","level":"区","content":"半岛明珠停车场B-031停车位车辆疑似违停，请现场人员注意查看确认"},
+  {"type":"告警","level":"区","content":"温州商贸城东停车场C-012停车位车辆疑似违停，请现场人员注意查看确认"},
+  {"type":"告警","level":"区","content":"温州商贸城西停车场A-009停车位车辆疑似违停，请现场人员注意查看确认"},
+  {"type":"告警","level":"区","content":"龙都花园A栋停车场A-046停车位检器硬件故障，请维修人员注意查看确认"},
+  {"type":"告警","level":"区","content":"香榭雅筑停车场B-021停车位停车已超过5天，疑似僵尸车，请注意"},
+  {"type":"告警","level":"区","content":"锦绣南山停车场C-053停车位停车已超过3天，疑似僵尸车，请注意"},
+  {"type":"告警","level":"区","content":"渝AM***7疑似逃逸，请现场人员注意查看确认"},
+  {"type":"告警","level":"区","content":"渝BV***6疑似逃逸，请现场人员注意查看确认"},
+  {"type":"告警","level":"区","content":"渝D9***8疑似逃逸，请现场人员注意查看确认"},
+];
+
+const park = [
+  {"type":"告警","level":"停车场","content":"A-046停车位疑似逃逸，请现场人员注意查看确认"},
+  {"type":"告警","level":"停车场","content":"A-046停车位疑似逃逸，请现场人员注意查看确认"},
+  {"type":"告警","level":"停车场","content":"C-012停车位疑似逃逸，请现场人员注意查看确认"},
+  {"type":"告警","level":"停车场","content":"B-021停车位停车已超过5天，疑似僵尸车，请注意"},
+  {"type":"告警","level":"停车场","content":"C-053停车位停车已超过3天，疑似僵尸车，请注意"},
+  {"type":"告警","level":"停车场","content":"A-046停车位检器硬件故障，请维修人员注意查看确认"},
+  {"type":"告警","level":"停车场","content":"A-009停车位车辆疑似违停，请现场人员注意查看确认"},
+  {"type":"告警","level":"停车场","content":"C-012停车位车辆疑似违停，请现场人员注意查看确认"},
+  {"type":"告警","level":"停车场","content":"B-031停车位车辆疑似违停，请现场人员注意查看确认"},
+  {"type":"通知","level":"停车场","content":"A-033停车位有车辆停入"},
+  {"type":"通知","level":"停车场","content":"B-031停车位有车辆停入"},
+  {"type":"通知","level":"停车场","content":"A-009停车位有车辆停入"},
+  {"type":"通知","level":"停车场","content":"B-063停车位付费取车"},
+  {"type":"通知","level":"停车场","content":"A-060停车位付费取车"},
+  {"type":"通知","level":"停车场","content":"A-022停车位付费取车"},
+  {"type":"通知","level":"停车场","content":"C-032停车位付费取车"},
+  {"type":"通知","level":"停车场","content":"C-010停车位付费取车"},  
+];
+
 
 class rightContent extends Component {
 
@@ -37,6 +89,7 @@ class rightContent extends Component {
     showInfo: true,
     workManInfo: [],
     personArr: [],
+    warning: city,
   }
 
   componentDidMount() {
@@ -261,6 +314,7 @@ class rightContent extends Component {
         this.reloadPerson(list);
       }
       this.reloadSat(list, level, name, breadList);
+      this.reloadWarning(level);
     });
   };
 
@@ -346,6 +400,16 @@ class rightContent extends Component {
       data = data.map(() => this.getRandom(map[areaName] || 0, parseFloat(saturation)).toFixed(2));
     }
     this.renderSaturationChart(data, timeData);
+  };
+
+  reloadWarning = (level) => {
+    const levelMap = [city, area, park];
+    this.setState({
+      warning: levelMap[level],
+    });
+    if (this.ref) {
+      this.ref.scrollTop = 0;
+    }
   };
 
   getDeviceData = (list) => {
@@ -443,6 +507,22 @@ class rightContent extends Component {
     this.ref = ref;
   };
 
+  renderWarning = () => {
+    const { warning: w } = this.state;
+    return w.map(({ type, level, content }) => {
+      const typeMap = {
+        通知: <img alt="" src={horn} className="horn" />,
+        告警: <img alt="" src={warning} className="warning" />,
+      };
+      return (
+        <div className="warning-item" key={content}>
+          {content}
+          {typeMap[type]}
+        </div>
+      );
+    });
+  };
+
   render() {
     const { currentState } = this.props;
     const centerLabel = currentState === 'city' ? '设备在线率' : '在岗收费员';
@@ -465,7 +545,10 @@ class rightContent extends Component {
           <div className="second-title">消息告警</div>
           <div className="tips-scroll-wrap" ref={this.getListRef} onMouseEnter={this.stop} onMouseLeave={this.start}>
             <div className="tips-wrap">
-              <div className="warning-item">
+              {
+                this.renderWarning()
+              }
+              {/* <div className="warning-item">
                 扫雪通知
                 <img alt="" src={horn} className="horn" />
               </div>
@@ -571,7 +654,7 @@ class rightContent extends Component {
                 <img alt="" src={warning} className="warning" />
               </div>
               <div className="warning-item">区长调研审查</div>
-              <div className="warning-item">局部暴雨通知</div>
+              <div className="warning-item">局部暴雨通知</div> */}
             </div>
           </div>
         </div>
