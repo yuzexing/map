@@ -317,7 +317,7 @@ class LeftContent extends Component {
     if (currentState === 'city') {
       return (
         <>
-          <div className="second-title">排行榜topN</div>
+          <div className="second-title">排行榜top5</div>
           <div className="panel-wrap">
             <div className="tab-wrap">
               <Tabs
