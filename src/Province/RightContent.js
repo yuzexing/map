@@ -4,50 +4,28 @@ import Echart from 'echarts';
 import warning from '../resource/image/warning.png';
 import horn from '../resource/image/horn.png';
 import worker from '../resource/image/work_man.png';
+import parkList from '../resource/data/parkRealData.js';
+import get from 'lodash/get';
+import baohedu from '../resource/data/baohedu.js';
+import badList from '../resource/data/bad.js';
 import './RightContent.css';
 
 
-const personArr = [
-  {
-    name: '王刚',
-    phone: '15357001171',
-    address: '建博路街道收费员',
-  },
-  {
-    name: '李强',
-    phone: '15357002171',
-    address: '建博路街道收费员',
-  },
-  {
-    name: '张建明',
-    phone: '15347002112',
-    address: '建博路街道收费员',
-  },
-  {
-    name: '王富强',
-    phone: '15347502162',
-    address: '建博路街道收费员',
-  },
-  {
-    name: '陈国栋',
-    phone: '15341542162',
-    address: '建博路街道收费员',
-  },
-  {
-    name: '陈启明',
-    phone: '15324542162',
-    address: '建博路街道收费员',
-  },
-  {
-    name: '蔡成康',
-    phone: '185745842162',
-    address: '建博路街道收费员',
-  },
-  {
-    name: '周沁园',
-    phone: '136748802162',
-    address: '建博路街道收费员',
-  },
+const originPerson = [
+  {"name":"肖英杰","phone":"13594641688"},
+  {"name":"王奕龙","phone":"18565351666"},
+  {"name":"阮涛","phone":"18956534853"},
+  {"name":"王波","phone":"15823123723"},
+  {"name":"冯爽","phone":"15365428018"},
+  {"name":"种嘉乐","phone":"13619247851"},
+  {"name":"仲光帅","phone":"18696518611"},
+  {"name":"付涛","phone":"18716784227"},
+  {"name":"陈玄","phone":"18020558783"},
+  {"name":"张佳佳","phone":"13626101589"},
+  {"name":"韩小闯","phone":"18651403931"},
+  {"name":"魏振东","phone":"17691263095"},
+  {"name":"常德存","phone":"13218038573"},
+  {"name":"冯伟","phone":"17623401021"},
 ];
 
 
@@ -57,14 +35,11 @@ class rightContent extends Component {
 
   state = {
     showInfo: true,
-    workManInfo: personArr[0],
+    workManInfo: [],
+    personArr: [],
   }
 
-
   componentDidMount() {
-    const data = [820, 932, 780, 934, 1290, 900];
-    this.renderSaturationChart(data);
-    this.renderOnlineChart([90, 20, 40]);
     this.scrollKey = requestAnimationFrame(this.autoScroll);
     this.autoChange();
   }
@@ -75,6 +50,7 @@ class rightContent extends Component {
       if (currentState === 'city') {
         return;
       }
+      const { personArr } = this.state;
       ++this.workManIndex;
       if (this.workManIndex > personArr.length - 1) {
         this.workManIndex = 0;
@@ -104,10 +80,10 @@ class rightContent extends Component {
     this.scrollKey = requestAnimationFrame(this.autoScroll);
   }
 
-  renderSaturationChart = (data) => {
+  renderSaturationChart = (data, time) => {
     const saturation = Echart.init(document.getElementById('saturation-chart'), 'customed');
     this.saturation = saturation;
-    const dataBig = data.map((i) => i + 150);
+    const dataBig = data.map((i) => parseInt(i) + 5);
     saturation.setOption({
       title: {
         show: false,
@@ -120,12 +96,12 @@ class rightContent extends Component {
           color: '#FFFFFF',
         },
         padding: [2, 5, 2, 5],
-        formatter: '{c}',
+        formatter: '{c}%',
       },
       xAxis: {
         type: 'category',
         boundaryGap: false,
-        data: ['0:00', '10:00', '13:00', '16:00', '20:00', '24:00'],
+        data: time/* ['0:00', '10:00', '13:00', '16:00', '20:00', '24:00'] */,
       },
       grid: {
         left: 0,
@@ -136,10 +112,18 @@ class rightContent extends Component {
         show: false,
       },
       yAxis: {
-        type: 'value'
+        type: 'value',
+        min: 0,
+        max: 100,
+        interval: 20,
+        axisLabel: {
+          formatter: '{value}%',
+        },
       },
       series: [
         {
+          // tooltip: null,
+          silent: true,
           data: dataBig,
           animationDuration: 2000,
           animationEasing: 'quinticInOut',
@@ -221,7 +205,7 @@ class rightContent extends Component {
           type:'pie',
           radius: [0, '30%'],
           data:[
-            { value:1, name:'直', itemStyle: { color: '#74a7ce' }  }
+            { value:1, name:'TY', itemStyle: { color: '#74a7ce' }  }
           ],
           silent: true,
           label: {
@@ -261,22 +245,60 @@ class rightContent extends Component {
     this.online = online;
   };
   
-  reloadData = () => {
+  reloadData = (level, name, breadList) => {
+
     setTimeout(() => {
+      const list = this.findLevelParkList(level, name) || [];
       const { currentState } = this.props;
       const v = this.getValue;
-      const data = [v(400, 800), v(400, 800), v(400, 800), v(400, 800), v(400, 800), v(400, 800)];
-      this.saturation.dispose();
+      this.saturation && this.saturation.dispose();
       if (currentState === 'city') {
-        const arr = [v(40, 70), v(10, 20), v(10, 20)];
-        this.online.dispose();
-        this.renderOnlineChart(arr);
+        const data = this.getDeviceData(list);
+        this.online && this.online.dispose();
+        this.renderOnlineChart(data);
       } else {
-        this.online.dispose();
+        this.online && this.online.dispose();
+        this.reloadPerson(list);
       }
-      this.renderSaturationChart(data);
+      this.reloadSat(list, level, name, breadList);
     });
   };
+
+  reloadPerson = (list) => {
+    let address = '';
+    if (list.length > 0) {
+      address = get(list, '0.address');
+    }
+    const getRandomArrayElements = (arr, count) => {
+      var shuffled = arr.slice(0), i = arr.length, min = i - count, temp, index;
+      while (i-- > min) {
+          index = Math.floor((i + 1) * Math.random());
+          temp = shuffled[index];
+          shuffled[index] = shuffled[i];
+          shuffled[i] = temp;
+      }
+      return shuffled.slice(min);
+    }
+    const arr = getRandomArrayElements(originPerson, 4);
+    arr.forEach((i) => {
+      i.address = `${address}处收费员`;
+    });
+    this.setState({
+      personArr: arr,
+    });
+  };
+
+  findLevelParkList = (level, name) => {
+    const levelMap = ['', 'area', 'name'];
+    const key = levelMap[level];
+    let list = [];
+    if (key) {
+      list = parkList.filter(({ [key]: val }) => val.includes(name) || name.includes(val));
+    } else {
+      list = parkList;
+    }
+    return list;
+  }
   
   reloadAreaChart = (chart) => {
     const v = this.getValue;
@@ -290,26 +312,60 @@ class rightContent extends Component {
     });
   };
 
-  reloadPieChart = (chart) => {
-    chart.setOption({
-      series: [
-      {},
-      {
-        data: [
-          {
-            value: this.getValue(40, 70), name:'在线', itemStyle: { color: '#2c82be' }, 
-            label: {
-              show: true,
-            }, 
-          }, 
-          {
-            value: this.getValue(10, 20), name:'故障', selected:true, itemStyle: { color: '#c4c38d' } 
-          },
-          { value: this.getValue(10, 20), name:'停用', itemStyle: { color: '#9cacba' } },
-        ],
-      }],
+  reloadSat = (list, level, name, breadList) => {
+    let time = window.moment().hour();
+    if (time < 5) {
+      time = 5;
+    }
+    const len = 5;
+    const start = time - len;
+    const todayData = [];
+    let data = [1,2,3,4,5,6];
+    const timeData = [`${time - len}:00`, `${time - len + 1}:00`, `${time - len + 2}:00`, `${time - len + 3}:00`, `${time - len + 4}:00`, `${time}:00`];
+    const map = {
+      大足区: 60.52,
+      垫江区: 0,
+      江北区: 96.97,
+      沙坪坝区: 95.51,
+      渝北区: 0,
+    };
+    if (level == 0) {
+      // 市饱和度：【区平均值，总饱和度】
+      data = data.map(() => this.getRandom(50.6, 58.43).toFixed(2));
+    } else if (level === 1) {
+      // 区饱和度：【总饱和度，区饱和度】
+      data = data.map(() => this.getRandom(map[name] || 0, 58.43).toFixed(2));
+    } else {
+      // 停车场饱和度：【区饱和度的值，停车场的值】
+      if (list.length === 0) {
+        return;
+      }
+      const { name: areaName } = breadList[1] || {};
+      const park = list[0];
+      const { saturation } = baohedu.find(({ saturation, name }) => park.name.includes(name) || name.includes(park.name)) || {};
+      data = data.map(() => this.getRandom(map[areaName] || 0, parseFloat(saturation)).toFixed(2));
+    }
+    this.renderSaturationChart(data, timeData);
+  };
+
+  getDeviceData = (list) => {
+    const currentList = badList.filter((v) => list.findIndex(({ name }) => v.name.includes(name) || name.includes(v.name)) !==-1);
+    const data = [0, 0, 0];
+    currentList.forEach(({ all }) => {
+      const [online, bad] = data;
+      const allD = parseInt(all);
+      data[0] = online + allD;
+      data[1] = bad + Math.floor(allD * 0.01);
     });
-  }
+    return data;
+  };
+
+  getRandom = (min, max) => {
+    if (max - min < 0) {
+      return Math.floor(Math.random()*(min - max) + max);
+    }
+    return Math.floor(Math.random()*(max - min) + min);
+  };
 
   getValue = (min = 20, max = 100) => {
     return parseInt(Math.random() * max + min);
@@ -353,7 +409,7 @@ class rightContent extends Component {
           <div className="work-man-distribution">
             <div className="work-top">
               {
-                [0, 1, 2, 3, 4, 5].map((_, index) => {
+                [0, 1].map((_, index) => {
                   return (
                     <img alt="" src={worker} className="work-man" key={_} /* onMouseEnter={() => this.showInfo(index)} onMouseLeave={this.hidInfo} */ />
                   );
@@ -368,7 +424,7 @@ class rightContent extends Component {
             </div>
           </div>
           {
-            showInfo ?
+            showInfo && workManInfo ?
             <div className="work-man-info">
               <div className="info-line">
                 <span style={{ marginRight: 4 }}>{workManInfo.name}</span>

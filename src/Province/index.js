@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
 import get from 'lodash/get';
 import { Select, Breadcrumb } from 'antd';
+import CountUp from 'react-countup';
 import image from '../resource/image/logo.png';
 import location from '../resource/image/location.png';
 import LeftContent from './LeftContent';
 import RightContent from './RightContent';
 import BottomContent from './BottomContent';
-import country from '../resource/data/country.js';
-import CountUp from 'react-countup';
+import area from '../resource/data/area.js';
+import parkList from '../resource/data/parkRealData.js';
+import parkOrderList from '../resource/data/parkOrderList.js';
 import './index.css';
+
 
 const moment = window.moment;
 const Option = Select.Option;
@@ -28,8 +31,8 @@ class Map extends Component {
     countryName: initCity,
     currentState: STATE_CITY,
     // currentState: STATE_PARK,
-    startMoney: 2301.12,
-    endMoney: 3411.09,
+    startMoney: 4000,
+    endMoney: 12826,
     breadList: [{ name: initCity, adcode: 500000 }],
   }
 
@@ -37,6 +40,7 @@ class Map extends Component {
 
   constructor(props) {
     super(props);
+    // start timer
     setInterval(() => {
       const time = moment().format('YYYY年MMMDo dddd ah:mm');
       const { time: oldTime } = this.state;
@@ -46,6 +50,9 @@ class Map extends Component {
         });
       }
     }, 1000);
+    // 统计初始化数据
+    // 市总金额
+    this.state.endMoney = 12826;
   }
 
   componentDidMount() {
@@ -64,18 +71,16 @@ class Map extends Component {
       viewMode: "3D", //开启3D视图,默认为关闭
       pitch: 30,
     });
-    map.on('complete', function () {
-      console.log('????????????????????????????');
-    });
     map.remove(map.getLayers());
     this.map = map;
     window.AMapUI.load(['ui/geo/DistrictExplorer', 'lib/$'], this.initMap);
     this.moneyAdd();
-    if (this.mapRef) {
-      setTimeout(() => {
+    setTimeout(() => {
+      if (this.mapRef) {
         this.mapRef.style.opacity = 1;
-      }, 500);
-    }
+      }
+    }, 800);
+    this.reloadData();
   }
 
   getMapRef = (ref) => {
@@ -136,13 +141,14 @@ class Map extends Component {
     districtExplorer.on('featureClick', function(e, feature) {
       var props = feature.properties;
       //如果存在子节点
+      const { name, adcode } = get(feature, 'properties');
       if (props.childrenNum > 0) {
         //切换聚焦区域
         switch2AreaNode(props.adcode);
-        _this.onAreaClick(feature, false);
+        _this.onAreaClick(name, adcode, false);
       } else {
         renderBottomFeature(feature);
-        _this.onAreaClick(feature, true);
+        _this.onAreaClick(name, adcode, false);
       }
     });
   }
@@ -336,16 +342,19 @@ class Map extends Component {
     const time = 8000 + parseInt(Math.random() * 10000);
     setTimeout(() => {
       const { endMoney } = this.state;
-      const newMoney = endMoney + parseFloat((20 + Math.random() * 30).toFixed(2));
+      const newMoney = parseInt(endMoney) + parseInt((10 + Math.random() * 10));
       this.setState({
-        startMoney: endMoney,
-        endMoney: newMoney,
+        startMoney: +endMoney,
+        endMoney: +newMoney,
       });
       this.moneyAdd();
     }, time);
   };
 
   createParkMap = (feature) => {
+    if (this.areaMapRef) {
+      this.areaMapRef.style.opacity = 0;
+    }
     const list = feature.geometry.coordinates;
     const mask = [];
     list.forEach((i) => {
@@ -373,7 +382,7 @@ class Map extends Component {
       scrollWheel: true,
       touchZoom: false,
       viewMode: "3D", //开启3D视图,默认为关闭
-      pitch: 30,
+      pitch: 45,
       mask: mask,
     });
     this.areaMap = map;
@@ -382,7 +391,7 @@ class Map extends Component {
     if (this.areaMapRef) {
       setTimeout(() => {
         this.areaMapRef.style.opacity = 1;
-      }, 500);
+      }, 800);
     }
 
     const districtExplorer = new window.DistrictExplorer({
@@ -392,20 +401,20 @@ class Map extends Component {
     this.currentAreaAdcode = feature.properties.adcode;
     this.areaDistrictExplorer = districtExplorer;
     
-    const getRandomPoint = (path) => {
-      const index = parseInt(Math.random() * path.length, 10);
-      const { lat, lng } = path[index];
-      const p = new window.AMap.LngLat(lng, lat);
-      const ln = Math.random() * 10000;
-      const la = Math.random() * 10000;
-      const offset = p.offset(1000 + ln * 5, 1000 + la * 5);
-      return offset;
-    }
-    const findPark = (path, p) => {
+    // const getRandomPoint = (path) => {
+    //   const index = parseInt(Math.random() * path.length, 10);
+    //   const { lat, lng } = path[index];
+    //   const p = new window.AMap.LngLat(lng, lat);
+    //   const ln = Math.random() * 10000;
+    //   const la = Math.random() * 10000;
+    //   const offset = p.offset(1000 + ln * 5, 1000 + la * 5);
+    //   return offset;
+    // }
+    // const findPark = (path, p) => {
       
-      return [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(() => getRandomPoint(path))
-        .filter((i) => p.contains(i))
-    }
+    //   const positionList = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(() => getRandomPoint(path))
+    //     .filter((i) => p.contains(i))
+    // }
 
     // districtExplorer.loadAreaNode(feature.properties.adcode, (error, areaNode) => {
     //     currentAreaNode = window.currentAreaNode = areaNode;
@@ -426,11 +435,11 @@ class Map extends Component {
         strokeOpacity: 1, //线透明度
         strokeWeight: 1, //线宽
         fillColor: '#004074', //填充色
-        fillOpacity: 1, //填充透明度
+        fillOpacity: 0, //填充透明度
         zIndex: -1000,
       });
       const polygons = districtExplorer.getAllFeaturePolygons();
-      map.setFitView(polygons, true, [50, 50, 100, 100]);
+      // map.setFitView(polygons, true, [50, 50, 100, 100]);
       // districtExplorer.off('featureMouseout featureMouseover featureMousemove featureClick');
       const marker = new window.AMap.Marker({
         position: get(feature, 'properties.center'),
@@ -444,47 +453,62 @@ class Map extends Component {
         bubble: true,
       });
       map.add(marker);
-      const p = polygons[0];
-      const path = p.getPath()[0] || [];
-      let park = findPark(path, p);
-      if (!park || park.length === 0) park = findPark(path, p);
-      if (!park || park.length === 0) park = findPark(path, p);
-      if (!park || park.length === 0) park = findPark(path, p);
-      
-      park && park.forEach((i) => {
-        const m = new window.AMap.Marker({
-          position: i,
-          anchor: 'center',
-          content: `<div class='wave solid dot-yellow'><div class='circle'></div><div class='content fa fa-bell'><i class=''></i></div></div>`,
-          label: {
-            content: `<div class='parkName'>${'智能停车场'}</div>`,
-            direction: 'bottom',
-          },
-          offset: new window.AMap.Pixel(0, 0),
-          bubble: false,
+      let park = [];
+      if ([500111, 500231, 500105, 500106, 500112].includes(this.currentAreaAdcode)) {
+        // 自有数据
+        park = parkList.filter(({ adcode }) => adcode == this.currentAreaAdcode);
+      } else {
+      // 造数据
+        // const p = polygons[0];
+        // const path = p.getPath()[0] || [];
+        // park = findPark(path, p);
+        // if (!park || park.length === 0) park = findPark(path, p);
+        // if (!park || park.length === 0) park = findPark(path, p);
+        // if (!park || park.length === 0) park = findPark(path, p);
+      }
+      const bounds = [];
+      if (park.length > 0) {
+        park && park.forEach(({ position, name, adcode }) => {
+          const [lng, lat] = position.split(',');
+          const p = new window.AMap.LngLat(lng, lat);
+          const m = new window.AMap.Marker({
+            position: p,
+            anchor: 'center',
+            content: `<div class='wave solid dot-yellow'><div class='circle'></div><div class='content fa fa-bell'><i class=''></i></div></div>`,
+            label: {
+              content: `<div class='parkName'>${name}</div>`,
+              direction: 'bottom',
+            },
+            offset: new window.AMap.Pixel(0, 0),
+            bubble: false,
+          });
+          bounds.push(m);
+          m.on('click', () => {
+            this.handleSelectPark(name);
+          });
+          map.add(m);
         });
-        m.on('click', () => {
-          this.handleSelectPark();
-        });
-        map.add(m);
-      });
+        map.setFitView(bounds, true, [0, 0, 0, 0]);
+      } else {
+        map.setFitView(polygons, true, [0, 0, 0, 0]);
+      }
   }
 
-  onAreaClick = (feature, selectPark) => {
-    const { name, adcode } = get(feature, 'properties');
-    const { breadList } = this.state;
-    breadList.push({
-      name,
-      adcode,
-    });
+  onAreaClick = (name, adcode) => {
+    // const seatNumber = parkList.filter(({ adcode: a }) => a == adcode).reduce((total, c) => total + parseInt(c.seatNumber), 0);
+    const breadList = [
+      {
+        name: initCity,
+        adcode: 500000,
+      },
+      {
+        name,
+        adcode: adcode,
+      },
+    ];
     this.setState({
       breadList,
     });
-    if (selectPark) {
-      this.setState({
-        currentState: STATE_PARK,
-      });
-    }
     this.reloadData();
   };
 
@@ -495,55 +519,57 @@ class Map extends Component {
     });
   };
 
-  handleChange = adcode => {
-    const { currentState } = this.state;
-    if (currentState === STATE_PARK) {
-      this.changeMap();
-      this.setState({
-        currentState: STATE_CITY,
-      });
-    }
-    const { name } = country.find(({ adcode: code }) => code === adcode);
-    this.setState({
-      currentAdcode: adcode,
-      countryName: this.handleConutryName(name),
-      breadList: [{name, adcode}],
-    });
-    this.switch2AreaNode(adcode);
+  handleChange = (adcode) => {
+    this.changeAreaMap(adcode);
+    const { name } = area.find(({ adcode: code }) => code == adcode);
+    this.onAreaClick(name, adcode, false);
   };
 
-  handleSelectPark = (a, b) => {
-    if (b) {
-      const breadList = [
-        {
-          name: initCity,
-          adcode: 500000,
-        },
-        {
-          name: '大足区',
-          adcode: 500111,
-        },
-        {
-          name: b.props.children,
-        },
-      ];
-      this.setState({
-        breadList,
-      });
-    } else {
-      const { breadList } = this.state;
-      const newList = breadList.filter(({ adcode }) => adcode);
-      newList.push({
-        name: '智能停车场',
-      });
-      this.setState({
-        breadList: newList,
-      });
-    }
-    this.changeAreaMap(500111);
+  // handleChange = adcode => {
+  //   const { currentState } = this.state;
+  //   if (currentState === STATE_PARK) {
+  //     this.changeMap();
+  //     this.setState({
+  //       currentState: STATE_CITY,
+  //     });
+  //   }
+  //   const { name } = area.find(({ adcode: code }) => code == adcode);
+  //   this.setState({
+  //     currentAdcode: adcode,
+  //     // countryName: this.handleConutryName(name),
+  //     breadList: [{name, adcode}],
+  //   });
+  //   this.switch2AreaNode(adcode);
+  // };
+
+  handleSelectPark = (paName) => {
+    // TODO: check
+    const { adcode } = parkList.find(({ name }) => paName === name);
+    const { name: cityName } = area.find(({ adcode: code }) => code == adcode);
+    const breadList = [
+      {
+        name: initCity,
+        adcode: 500000,
+      },
+      {
+        name: cityName,
+        adcode: adcode,
+      },
+      {
+        name: paName,
+      },
+    ];
+    this.setState({
+      breadList,
+    });
     this.setState({
       currentState: STATE_PARK,
     });
+    if (/* this.state.currentState === STATE_PARK &&  */this.currentAreaAdcode == adcode) {
+      this.reloadData();
+      return;
+    }
+    this.changeAreaMap(adcode);
     this.reloadData();
   };
 
@@ -557,16 +583,70 @@ class Map extends Component {
   };
 
   reloadData = () => {
-    if (this.bottomRef) {
-      this.bottomRef.reloadData();
-    }
-    if (this.leftRef) {
-      this.leftRef.reloadData();
-    }
-    if (this.rightRef) {
-      this.rightRef.reloadData();
+    setTimeout(() => {
+      const { breadList } = this.state;
+      const len = breadList.length - 1;
+      const last = breadList[len];
+      if (this.bottomRef) {
+        this.bottomRef.reloadData(len, last.name, breadList);
+      }
+      if (this.leftRef) {
+        this.leftRef.reloadData(len, last.name);
+      }
+      if (this.rightRef) {
+        this.rightRef.reloadData(len, last.name, breadList);
+      }
+      this.indexReloadData(len, last.name);
+    });
+  };
+
+  indexReloadData = (level, name) => {
+    if (level === 0) {
+      this.setState({
+        endMoney: 12826,
+        startMoney: 8000,
+      });
+    } else if (level === 1) {
+      const map = {
+        大足区: '927',
+        垫江区: '337',
+        江北区: '928',
+        沙坪坝区: '602',
+        渝北区: '100',
+      };
+      this.setState({
+        endMoney: +map[name] || 0,
+        startMoney: 500,
+      });
+    } else {
+      const list = this.findLevelParkList(level, name);
+      if (Array.isArray(list) && list.length > 0) {
+        const item = list[0] || {};
+        const taget = parkOrderList.find(({ name: paName }) => paName.includes(item.name) || item.name.includes(paName)) || {};
+        this.setState({
+          endMoney: +taget.income || 0,
+          startMoney: 0,
+        });
+      } else {
+        this.setState({
+          endMoney: 0,
+          startMoney: 0,
+        });
+      }
     }
   };
+
+  findLevelParkList = (level, name) => {
+    const levelMap = ['', 'area', 'name'];
+    const key = levelMap[level];
+    let list = [];
+    if (key) {
+      list = parkList.filter(({ [key]: val }) => val.includes(name) || name.includes(val));
+    } else {
+      list = parkList;
+    }
+    return list;
+  }
 
   getBottomRef = (ref) => {
     this.bottomRef = ref;
@@ -581,8 +661,13 @@ class Map extends Component {
   };
 
   switch2Adcode = (adcode, index) => {
-    if (this.state.currentState === STATE_PARK && this.currentAreaAdcode === adcode) {
-      this.reloadData();
+    // 展示上一级地图
+    const { breadList } = this.state;
+    const newBread = breadList.slice(0, index + 1);
+    this.setState({
+      breadList: newBread,
+    });
+    if (/* this.state.currentState === STATE_PARK && */ this.currentAreaAdcode == adcode) {
     } else {
       this.changeMap();
       this.setState({
@@ -590,12 +675,7 @@ class Map extends Component {
       });
       this.switch2AreaNode(adcode);
     }
-    // 展示上一级地图
-    const { breadList } = this.state;
-    const newBread = breadList.slice(0, index + 1);
-    this.setState({
-      breadList: newBread,
-    });
+    this.reloadData();
   };
 
   changeMap = () => {
@@ -651,21 +731,19 @@ class Map extends Component {
               placeholder="请选择停车场"
               className="city-select"
             >
-              <Option value="0">半岛明珠停车场</Option>
-              <Option value="1">建博路停车场</Option>
-              <Option value="2">至德路停车场</Option>
-              <Option value="3">丰盛路停车场</Option>
-              <Option value="4">大足停车场</Option>
+              {
+                parkList.map(({ adcode, name }) => <Option value={name} key={name}>{name}</Option>)
+              }
             </Select>
             <Select
-              defaultValue={currentAdcode} // 重庆 500000
+              // defaultValue={} // 重庆 500000
               style={{ width: 100, marginRight: 12 }}
               onChange={this.handleChange}
-              placeholder="请选择省份"
+              placeholder="请选择区域"
               className="city-select"
             >
               {
-                country.map(({ name, adcode }) => <Option value={adcode} key={adcode}>{name}</Option>)
+                area.map(({ name, adcode }) => <Option value={adcode} key={adcode}>{name}</Option>)
               }
             </Select>
             <span className="location-city-name">重庆</span>
@@ -684,13 +762,13 @@ class Map extends Component {
                 end={endMoney}
                 duration={2}
                 formattingFn={(value) => {
-                  const str = value.toFixed(2).split('');
+                  const str = String(value).split('');
                   const len = str.length;
                   const arr = str.map((i, idx) => {
                     if (i === '.') {
                       return `<div class="dot"></div>`;
                     }
-                    const style = idx === (len - 4) ? 'no-margin' : '';
+                    const style = /* idx === (len - 4) ? 'no-margin' : */ '';
                     return (
                       `<div class="card-number ${style}">${i}</div>`
                     );
@@ -698,7 +776,7 @@ class Map extends Component {
                   arr.push(`<div class="price-unit">元</div>`);
                   return arr.join('');
                 }}
-                decimals={2}
+                decimals={0}
               >
               </CountUp>
             </div>

@@ -2,9 +2,16 @@ import React, { Component } from 'react';
 import get from 'lodash/get';
 import { Tabs } from 'antd';
 import Echart from 'echarts';
+import parkList from '../resource/data/parkRealData.js';
+import parkOrderList from '../resource/data/parkOrderList.js';
+import orderList from '../resource/data/orderList.js';
+import swallowList from '../resource/data/swallow.js';
+import useRateList from '../resource/data/useRateList.js';
 import './bottomContent.css';
 
 class LeftContent extends Component {
+
+  state = {};
   
   componentDidMount() {
     this.renderEscapeChart([1700, 800, 600, 1300, 1900, 1400], [950, 500, 1100, 1000, 500, 1000]);
@@ -16,7 +23,10 @@ class LeftContent extends Component {
     this.renderOrderChart(orderData);
   }
 
-  renderEscapeChart = (data1, data2) => {
+  /**
+    逃逸率
+   */
+  renderEscapeChart = (data1, data2, time) => {
   
     const escape = Echart.init(document.getElementById('escape-chart'), 'customed');
     escape.setOption({
@@ -35,7 +45,7 @@ class LeftContent extends Component {
         formatter: '{c}',
       },
       xAxis: {
-        data: ['17时', '18时', '19时', '20时', '21时', '22时'],
+        data: time/* ['17时', '18时', '19时', '20时', '21时', '22时'] */,
       },
       grid: {
         left: 0,
@@ -46,7 +56,13 @@ class LeftContent extends Component {
         show: false,
       },
       yAxis: {
-        splitNumber: 3,
+        type: 'value',
+        min: 0,
+        max: 2,
+        interval: 0.5,
+        axisLabel: {
+          formatter: '{value}%',
+        },
       },
       series: [
         {
@@ -73,16 +89,19 @@ class LeftContent extends Component {
     this.escape = escape;
   };
 
-  renderInOutChart = (data) => {
-  
-    // 流转率
+  // 吞吐量
+  renderInOutChart = (data, time) => {
     const inOut = Echart.init(document.getElementById('in-out-chart'), 'customed');
-    const dataBig = data.map((i) => i + 150);
+    var sum=0;
+    for(var i = 0; i < data.length; i++){
+      sum += data[i];
+    }
+    var mean  = sum / data.length;
+    const dataBig = data.map((i) => i + parseInt(mean * 0.2));
     inOut.setOption({
       title: {
         show: false,
       },
-      
       tooltip: {
         backgroundColor:'rgba(229,182,106, 0.9)',
         borderColor: 'rgba(229,182,106, 0.9)',
@@ -96,7 +115,7 @@ class LeftContent extends Component {
       xAxis: {
         type: 'category',
         boundaryGap: false,
-        data: ['0:00', '10:00', '13:00', '16:00', '20:00', '24:00'],
+        data: time/* ['0:00', '10:00', '13:00', '16:00', '20:00', '24:00'] */,
       },
       grid: {
         left: 0,
@@ -114,6 +133,7 @@ class LeftContent extends Component {
       },
       series: [
         {
+          silent: true,
           data: dataBig,
           animationDuration: 2000,
           animationEasing: 'quinticInOut',
@@ -167,6 +187,9 @@ class LeftContent extends Component {
     this.inOut = inOut;
   };
 
+  /**
+   * 利用率
+   */
   renderUseRateChart = (data) => {
     
     const useRate = Echart.init(document.getElementById('use-chart'), 'customed');
@@ -232,6 +255,9 @@ class LeftContent extends Component {
     this.useRate = useRate;
   }
 
+  /**
+   * 流转率
+   */
   renderSwallowChart = (data) => {
 
     const swallow = Echart.init(document.getElementById('swallow-chart'), 'customed');
@@ -296,10 +322,16 @@ class LeftContent extends Component {
     });
     this.swallow = swallow;
   }
-  renderOrderChart = (data) => {
-    // 订单量
+
+  // 订单量
+  renderOrderChart = (data, time) => {
     const order = Echart.init(document.getElementById('order-chart'), 'customed');
-    const orderDataBig = data.map((i) => i + 20);
+    var sum=0;
+    for(var i = 0; i < data.length; i++){
+      sum += data[i];
+    }
+    var mean  = sum / data.length;
+    const orderDataBig = data.map((i) => i + parseInt(mean * 0.2));
     order.setOption({
       title: {
         show: false,
@@ -307,7 +339,7 @@ class LeftContent extends Component {
       xAxis: {
         type: 'category',
         boundaryGap: false,
-        data: ['0:00', '2:00', '4:00', '6:00', '8:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00'],
+        data: time/* ['0:00', '2:00', '4:00', '6:00', '8:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00'] */,
       },
       
       tooltip: {
@@ -336,6 +368,7 @@ class LeftContent extends Component {
       },
       series: [
         {
+          silent: true,
           data: orderDataBig,
           type: 'line',
           animationDuration: 2000,
@@ -406,55 +439,214 @@ class LeftContent extends Component {
     this.order = order;
   };
 
-  reloadData = () => {
+  reloadData = (level, name, breadList) => {
+
+    const list = this.findLevelParkList(level, name);
+
     const v = this.getValue;
     this.escape.dispose();
     this.inOut.dispose();
     this.useRate.dispose();
     this.swallow.dispose();
     this.order.dispose();
-    this.renderEscapeChart([v(600, 1100), v(600, 1100), v(600, 1100), v(600, 1100), v(600, 1100), v(600, 1100)], [v(600, 1100), v(600, 1100), v(600, 1100), v(600, 1100), v(600, 1100), v(600, 1100)]);
-    const data = [v(600, 1100), v(600, 1100), v(600, 1100), v(600, 1100), v(600, 1100), v(600, 1100)];
-    this.renderInOutChart(data);
-    this.renderUseRateChart(58);
-    this.renderSwallowChart(64);
-    const orderData = [v(70, 70), v(70, 70), v(70, 70), v(70, 70), v(70, 70), v(70, 70), v(70, 70), v(70, 70), v(70, 70), v(70, 70), v(70, 70), v(70, 70), v(70, 70), v(70, 70)];
-    this.renderOrderChart(orderData);
-    // this.reloadChart(this.escape);
-    // this.reloadChart(this.inOut);
-    // this.reloadChart(this.useRate);
-    // this.reloadChart(this.swallow);
-    // this.reloadChart(this.order);
+
+    const { escape1, escape2, timeData1 } = this.getEscapeData(list, level, name);
+    this.renderEscapeChart(escape1, escape2, timeData1);
+    
+    const { inOutData, timeData } = this.getInOutData(list, level, name, breadList);
+    this.renderInOutChart(inOutData, timeData);
+
+
+    const swallowData = this.getSwallowData(list, level, name, breadList);
+    this.renderSwallowChart(swallowData);
+    
+
+    const useRateData = this.getUseRateData(list, level, name, breadList);
+    this.renderUseRateChart(useRateData);
+
+
+    // const orderData = [v(70, 70), v(70, 70), v(70, 70), v(70, 70), v(70, 70), v(70, 70), v(70, 70), v(70, 70), v(70, 70), v(70, 70), v(70, 70), v(70, 70), v(70, 70), v(70, 70)];
+    const { orderData, timeData2 } = this.getOrderNumData(list, level, name);    
+    this.renderOrderChart(orderData, timeData2);
+
+
+    this.setState({
+      swallowRate: swallowData,
+      useRateData,
+    });
   };
 
+  findLevelParkList = (level, name) => {
+    const levelMap = ['', 'area', 'name'];
+    const key = levelMap[level];
+    let list = [];
+    if (key) {
+      list = parkList.filter(({ [key]: val }) => val.includes(name) || name.includes(val));
+    } else {
+      list = parkList;
+    }
+    return list;
+  }
+
+  getSwallowData = (list, level, name) => {
+    if (level === 0) {
+      return 163.53;
+    } else if (level === 1) {
+      const map = {
+        大足区: 199.24,
+        垫江区: 0,
+        江北区: 233.33,
+        沙坪坝区: 223.42,
+        渝北区: 0,
+      };
+      return map[name] || 0;
+    } else if (list.length > 0) {
+      const v = list[0];
+      const { swallow } = swallowList.find(({ name }) => v.name.includes(name) || name.includes(v.name)) || {};
+      return parseFloat(swallow);
+    }
+    return 0;
+  };
+
+  getUseRateData = (list, level, name) => {
+    if (level === 0) {
+      return 12.35;
+    } else if (level === 1) {
+      const map = {
+        大足区: 15.07,
+        垫江区: 0,
+        江北区: 44.61,
+        沙坪坝区: 15.34,
+        渝北区: 0,
+      };
+      return map[name] || 0;
+    } else if (list.length > 0) {
+      const v = list[0];
+      const { rate } = useRateList.find(({ name }) => v.name.includes(name) || name.includes(v.name)) || {};
+      return parseFloat(rate);
+    }
+    return 0;
+  };
+
+  getInOutData = (list, level, name, breadList) => {
+    let time = window.moment().hour();
+    if (time < 5) {
+      time = 5;
+    }
+    const len = 5;
+    const start = time - len;
+    const todayData = [];
+    let data = [1,2,3,4,5,6];
+    const timeData = [`${time - len}:00`, `${time - len + 1}:00`, `${time - len + 2}:00`, `${time - len + 3}:00`, `${time - len + 4}:00`, `${time}:00`];
+    const map = {
+      大足区: 1847,
+      垫江区: 0,
+      江北区: 77,
+      沙坪坝区: 1345,
+      渝北区: 0,
+    };
+    if (level == 0) {
+      // 3269
+      data = data.map(() => parseInt(this.getRandom(817.25, 3269)));
+    } else if (level === 1) {
+      // parseInt(this.getRandom(map[name] || 0, 3269)
+      data = data.map(() => parseInt(this.getRandom(map[name] || 0, 3269)));
+    } else {
+      if (list.length === 0) {
+        return {
+          inOutData: [],
+          timeData: []
+        };
+      }
+      const { name } = list[1] || {};
+      const park = list[0];
+      const { swallow, 停车位数量 } = swallowList.find(({ name }) => park.name.includes(name) || name.includes(park.name)) || {};
+      data = data.map(() => parseInt(this.getRandom(停车位数量, swallow)));
+    }
+    return {
+      inOutData: data,
+      timeData,
+    };
+  };
+
+  getEscapeData = (list, level, name) => {
+    let time = window.moment().hour();
+    if (time < 5) {
+      time = 5;
+    }
+    const len = 5;
+    const start = time - len;
+    const escape1 = [];
+    const escape2 = [];
+    const timeData1 = [`${time - len}时`, `${time - len + 1}时`, `${time - len + 2}时`, `${time - len + 3}时`, `${time - len + 4}时`, `${time}时`];
+    [1, 2, 3, 4, 5, 6].forEach(() => {
+      escape1.push(+this.getRandom(0, 2).toFixed(2));
+      escape2.push(+this.getRandom(0, 2).toFixed(2));
+    });
+
+    return {
+      escape1, escape2, timeData1
+    };
+  };
+
+  getOrderNumData = (list, level, name) => {
+    let time = window.moment().hour();
+    if (time < 5) {
+      time = 5;
+    }
+    const len = 5;
+    const start = time - len;
+    const data = [];
+    const todayKey = '2019-08-21';
+    const timeData2 = [`${time - len}:00`, `${time - len + 1}:00`, `${time - len + 2}:00`, `${time - len + 3}:00`, `${time - len + 4}:00`, `${time}:00`];
+    const arr = orderList.filter((v) => list.findIndex(({ name }) => v.paName.includes(name) || name.includes(v.paName)) !==-1 );
+    
+    arr && arr.forEach(({ orders }) => {
+      orders.forEach(({ hours, currentDate, orderNum }) => {
+        if (+hours >= start && +hours <= time && currentDate === todayKey) {
+          const index = +hours - start;
+          const val = data[index] || 0;
+          data[index] = val + parseInt(orderNum);
+        }
+      });
+    });
+    return {
+      orderData: data,
+      timeData2
+    };
+  };
+
+  getRandom = (min, max) => {
+    min = +min;
+    max = +max;
+    if (max - min < 0) {
+      return Math.random()*(min - max) + max;
+    }
+    return Math.random()*(max - min) + min;
+  };
   
   getValue = (min = 20, max = 100) => {
     return parseInt(Math.random() * max + min);
   };
 
-  reloadChart = (chart) => {
-    const option = chart.getOption();
-    chart.clear();
-    chart.setOption(option);
-  }
-
   render() {
+    const { swallowRate, useRateData } = this.state;
     return (
       <div className="bottom-content">
         <div id="use-chart-wrap">
           <div className="line-chart-wrap">
-            <div className="use-chart-title">利用率</div>
+            <div className="use-chart-title">流转率</div>
             <div id="swallow-chart"></div>
-            <div className="rate">64%</div>
+            <div className="rate">{swallowRate}%</div>
           </div>
           <div className="line-chart-wrap">
-            <div className="use-chart-title">吞吐量</div>
+            <div className="use-chart-title">利用率</div>
             <div id="use-chart"></div>
-            <div className="rate">58%</div>
+            <div className="rate">{useRateData}%</div>
           </div>
         </div>
         <div id="in-out-chart-wrap">
-          <div className="bottom-chart-title">流转率</div>
+          <div className="bottom-chart-title">吞吐量</div>
           <div id="in-out-chart">
           </div>
         </div>

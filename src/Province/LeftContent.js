@@ -5,7 +5,13 @@ import Echart from 'echarts';
 import CountUp from 'react-countup';
 import imgNumber from '../resource/image/park_number.png';
 import imgSeat from '../resource/image/park_seat.png';
+import parkList from '../resource/data/parkRealData.js';
 import { list1, list2, list3, list4, list5, list6 } from '../resource/data/parkList';
+import orderList from '../resource/data/orderList.js';
+import baohedu from '../resource/data/baohedu.js';
+import parkOrderList from '../resource/data/parkOrderList.js';
+import swallowList from '../resource/data/swallow.js';
+import badList from '../resource/data/bad.js';
 import './leftContent.css';
 
 const { TabPane } = Tabs;
@@ -50,22 +56,22 @@ class LeftContent extends Component {
     startSeatAmount: 0,
     endSeatAmount: 412,
     tab: 0,
+    topList: TOPS_TAB_ARRARY,
   }
 
   componentDidMount() {
-    this.renderIcomeChart([1700, 800, 600, 1300, 1900, 1400], [950, 500, 1100, 1000, 500, 1000]);
-    setInterval(() => {
-      const { tab } = this.state;
-      const { currentState } = this.props;
-      const max = currentState === 'city' ? 5 : 4;
-      let newTab = tab + 1; 
-      if (newTab > max) {
-        newTab = 0;
-      }
-      this.setState({
-        tab: newTab,
-      });
-    }, 6000);
+    // setInterval(() => {
+    //   const { tab } = this.state;
+    //   const { currentState } = this.props;
+    //   const max = currentState === 'city' ? 5 : 4;
+    //   let newTab = tab + 1; 
+    //   if (newTab > max) {
+    //     newTab = 0;
+    //   }
+    //   this.setState({
+    //     tab: newTab,
+    //   });
+    // }, 6000);
     this.seatAomuntAdd();
   }
 
@@ -74,9 +80,11 @@ class LeftContent extends Component {
     setTimeout(() => {
       const add = Math.random() < 0.5;
       const { endSeatAmount, seatNumber } = this.state;
-      let newEnd = endSeatAmount + (parseInt(2 + Math.random() * 3) * (add ? 1 : -1));
+      let newEnd = endSeatAmount + (parseInt(0 + Math.random() * 5) * (add ? 1 : -1));
       if (newEnd > seatNumber) {
         newEnd = seatNumber;
+      } else if (newEnd <= 0) {
+        newEnd = 0;
       }
       this.setState({
         startSeatAmount: endSeatAmount,
@@ -86,7 +94,7 @@ class LeftContent extends Component {
     }, time);
   };
 
-  renderIcomeChart = (data1, data2) => {
+  renderIcomeChart = (data1, data2, time) => {
     const income = Echart.init(document.getElementById('hour-income-chart'), 'customed');
     income.setOption({
       title: {
@@ -103,7 +111,7 @@ class LeftContent extends Component {
         formatter: '{c}',
       },
       xAxis: {
-        data: ['17时', '18时', '19时', '20时', '21时', '22时'],
+        data: time,
       },
       grid: {
         left: 0,
@@ -140,24 +148,120 @@ class LeftContent extends Component {
     this.income = income;
   };
   
-  reloadData = () => {
-    this.reloadChart(this.income);
-    const number = 200 + parseInt(Math.random() * 300);
-    const endSeatAmount = 0 + parseInt(Math.random() * number);
+  reloadData = (level, name) => {
+    const list = this.findLevelParkList(level, name) || [];
+    let seatNumber = 0;
+    list.forEach(({ seatNumber: n }) => {
+      seatNumber = seatNumber + Number(n);
+    });
+    const endSeatAmount = parseInt(seatNumber * 0.8);
+    this.reloadChart(this.income, list);
+    this.reloadTops(list, level, name);
     this.setState({
-      seatNumber: number,
+      seatNumber,
       startSeatAmount: 0,
       endSeatAmount,
       tab: 0,
     });
   };
 
-  reloadChart = (chart) => {
-    const v = this.getValue;
-    const data1 = [v(600, 1100),v(600, 1100),v(600, 1100),v(600, 1100),v(600, 1100),v(600, 1100)];
-    const data2 = [v(600, 1100),v(600, 1100),v(600, 1100),v(600, 1100),v(600, 1100),v(600, 1100)];
-    chart.dispose();
-    this.renderIcomeChart(data1, data2);
+  reloadTops = (list, level, name) => {
+    const { topList } = this.state;
+    const arr0 = baohedu.filter((v) => list.findIndex(({ name }) => v.name.includes(name) || name.includes(v.name)) !==-1).sort((a, b) => parseFloat(b.saturation) - parseFloat(a.saturation));
+    if (arr0.length > 5) {
+      arr0.length = 5;
+    }
+    // paName: '半岛明珠停车场',
+    // amount: '80%',
+    // topList[0].data = arr0.map(({ name, saturation }) => ({ paName: name, amount: `${parseFloat(saturation)}%` }));
+    topList[0].data = arr0.map(({ name, saturation }) => ({ paName: name, amount: `${saturation}` }));
+
+    const arr1 = parkOrderList.filter((v) => list.findIndex(({ name }) => v.name.includes(name) || name.includes(v.name)) !==-1).sort((a, b) => parseFloat(b.income) - parseFloat(a.income));
+    if (arr1.length > 5) {
+      arr1.length = 5;
+    }
+
+    topList[1].data = arr1.map(({ name, income }) => ({ paName: name, amount: income }));
+
+    
+    const arr2 = swallowList.filter((v) => list.findIndex(({ name }) => v.name.includes(name) || name.includes(v.name)) !==-1).sort((a, b) => parseFloat(b.swallow) - parseFloat(a.swallow));
+    if (arr2.length > 5) {
+      arr2.length = 5;
+    }
+
+    topList[2].data = arr2.map(({ name, swallow }) => ({ paName: name, amount: swallow }));
+    
+    const arr3 = swallowList.filter((v) => list.findIndex(({ name }) => v.name.includes(name) || name.includes(v.name)) !==-1).sort((a, b) => parseFloat(b.circulation) - parseFloat(a.circulation));
+    if (arr3.length > 5) {
+      arr3.length = 5;
+    }
+
+    // topList[3].data = arr3.map(({ name, circulation }) => ({ paName: name, amount: `${parseFloat(circulation)}%` }));
+    topList[3].data = arr3.map(({ name, circulation }) => ({ paName: name, amount: circulation }));
+    
+    const arr4 = [...list.sort((a, b) => parseFloat(a.bad) - parseFloat(b.bad))];
+    if (arr4.length > 5) {
+      arr4.length = 5;
+    }
+    topList[4].data = arr4.map(({ name, bad }) => ({ paName: name, amount: bad }));
+
+    const arr5 = [...list.sort((a, b) => parseFloat(a.escape) - parseFloat(b.escape))];
+    if (arr5.length > 5) {
+      arr5.length = 5;
+    }
+    topList[5].data = arr5.map(({ name, escape }) => ({ paName: name, amount: escape }));
+    
+    this.setState({
+      topList: [...topList],
+    });
+  };
+
+  reloadChart = (chart, list) => {
+    const [d1, d2, t] = this.getIncomeData(list);
+    chart && chart.dispose();
+    this.renderIcomeChart(d1, d2, t);
+  }
+  
+  getIncomeData = (list) => {
+    let time = window.moment().hour();
+    if (time < 5) {
+      time = 5;
+    }
+    const len = 5;
+    const start = time - len;
+    const yesterDayKey = '2019-08-20';
+    const todayKey = '2019-08-21';
+    const yesterdayData = [];
+    const todayData = [];
+    const timeData = [`${time - len}时`, `${time - len + 1}时`, `${time - len + 2}时`, `${time - len + 3}时`, `${time - len + 4}时`, `${time}时`];
+    const dataMap = {
+      [yesterDayKey]: yesterdayData,
+      [todayKey]: todayData,
+    };
+    const arr = orderList.filter((v) => list.findIndex(({ name }) => v.paName.includes(name) || name.includes(v.paName)) !==-1 );
+    arr && arr.forEach(({ orders }) => {
+      orders.forEach(({ hours, currentDate, orderNum, totalCost }) => {
+        if (+hours >= start && +hours <= time) {
+          const index = +hours - start;
+          const data = dataMap[currentDate];
+          const val = data[index] || 0;
+          data[index] = val + parseInt(totalCost);
+        }
+      });
+    });
+    return [yesterdayData, todayData, timeData];
+  };
+
+  findLevelParkList = (level, name) => {
+    const levelMap = ['', 'area', 'name'];
+    const key = levelMap[level];
+    let list = [];
+    if (key) {
+      list = parkList.filter(({ [key]: val }) => val.includes(name) || name.includes(val));
+    } else {
+      list = parkList;
+    }
+    return list;
   }
   
   getValue = (min = 20, max = 100) => {
@@ -182,7 +286,7 @@ class LeftContent extends Component {
           </div>
         </div>
         {
-          data.map(({ no, paName, amount }, index) => {
+          data.length > 0 ? data.map(({ no, paName, amount }, index) => {
             return (
               <div className="list-item" key={amount + paName}>
                 <span className="item-one">{index + 1}</span>
@@ -191,6 +295,7 @@ class LeftContent extends Component {
               </div>
             );
           })
+          : <div className="no-data-label">暂无数据</div>
         }
       </>
     );
@@ -208,7 +313,7 @@ class LeftContent extends Component {
 
   renderLeftBottom = () => {
     const { currentState } = this.props;
-    const { tab } = this.state;
+    const { tab, topList } = this.state;
     if (currentState === 'city') {
       return (
         <>
@@ -222,7 +327,7 @@ class LeftContent extends Component {
                 key={currentState}
               >
                 {
-                  TOPS_TAB_ARRARY.map(({ data, title, name }, index) => {
+                  topList.map(({ data, title, name }, index) => {
                     return (
                       <TabPane tab={<span className="panel-dot"></span>} key={index}>
                         {this.renderParks(data, title, name)}

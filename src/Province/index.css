@@ -162,10 +162,14 @@ body {
 }
 .area-map-wrap {
   position: absolute;
-  top: 0;
+  top: 250px;
+  bottom: 200px;
+  left: 370px;
+  right: 340px;
+  /* top: 0;
   bottom: 0;
   left: 0;
-  right: 0;
+  right: 0; */
   z-index: 2;
   display: none;
 }
