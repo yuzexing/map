@@ -76,7 +76,8 @@ class LeftContent extends Component {
   }
 
   seatAomuntAdd = () => {
-    const time = 3000 + parseInt(Math.random() * 5000);
+    // const time = 3000 + parseInt(Math.random() * 5000);
+    const time = 60 * 1000;
     setTimeout(() => {
       const add = Math.random() < 0.5;
       const { endSeatAmount, seatNumber } = this.state;

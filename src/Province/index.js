@@ -347,7 +347,7 @@ class Map extends Component {
   }
 
   moneyAdd = () => {
-    const time = 8000 + parseInt(Math.random() * 10000);
+    const time = /* 8000 + parseInt(Math.random() * 10000) */30 * 1000;
     setTimeout(() => {
       const { endMoney } = this.state;
       const newMoney = parseInt(endMoney) + parseInt((0 + Math.random() * 10));
