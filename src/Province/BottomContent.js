@@ -490,13 +490,13 @@ class LeftContent extends Component {
 
   getSwallowData = (list, level, name) => {
     if (level === 0) {
-      return 163.53;
+      return 149.07;
     } else if (level === 1) {
       const map = {
-        大足区: 199.24,
-        垫江区: 0,
-        江北区: 233.33,
-        沙坪坝区: 223.42,
+        大足区: 152.32,
+        垫江区: 77.45,
+        江北区: 215.15,
+        沙坪坝区: 205.32,
         渝北区: 0,
       };
       return map[name] || 0;

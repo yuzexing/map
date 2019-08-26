@@ -377,18 +377,18 @@ class rightContent extends Component {
     let data = [1,2,3,4,5,6];
     const timeData = [`${time - len}:00`, `${time - len + 1}:00`, `${time - len + 2}:00`, `${time - len + 3}:00`, `${time - len + 4}:00`, `${time}:00`];
     const map = {
-      大足区: 60.52,
-      垫江区: 0,
-      江北区: 96.97,
-      沙坪坝区: 95.51,
+      大足区: 49.95,
+      垫江区: 0.59,
+      江北区: 75.76,
+      沙坪坝区: 78.74,
       渝北区: 0,
     };
     if (level == 0) {
       // 市饱和度：【区平均值，总饱和度】
-      data = data.map(() => this.getRandom(50.6, 58.43).toFixed(2));
+      data = data.map(() => this.getRandom(50.6, 48.22).toFixed(2));
     } else if (level === 1) {
       // 区饱和度：【总饱和度，区饱和度】
-      data = data.map(() => this.getRandom(map[name] || 0, 58.43).toFixed(2));
+      data = data.map(() => this.getRandom(map[name] || 0, 48.22).toFixed(2));
     } else {
       // 停车场饱和度：【区饱和度的值，停车场的值】
       if (list.length === 0) {
